@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS Conversation (
+    ConversationID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Subject TEXT
+);

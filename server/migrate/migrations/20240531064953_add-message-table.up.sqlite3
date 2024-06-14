@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS Message (
+    MessageID INTEGER PRIMARY KEY AUTOINCREMENT,
+    SenderID INTEGER,
+    RecipientID INTEGER,
+    Content TEXT,
+    Timestamp DATETIME,
+    ConversationID INTEGER,
+    FOREIGN KEY (SenderID) REFERENCES User(UserID),
+    FOREIGN KEY (RecipientID) REFERENCES User(UserID),
+    FOREIGN KEY (ConversationID) REFERENCES Conversation(ConversationID)
+);
