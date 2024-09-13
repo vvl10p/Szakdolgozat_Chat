@@ -31,7 +31,7 @@ function ChatWindow(){
 
                             </div>
                             <div className={"chatWindowControlInput"}>
-                                <textarea className={"chatWindowControlInputField"} onChange={(e)=>(setInputText(e.target.value))} placeholder={"type your message here!"}></textarea>
+                                <textarea className={"chatWindowControlInputField"} onChange={(e)=>(setInputText(e.target.value))} defaultValue={inputText} placeholder={"type your message here!"}></textarea>
                             </div>
                             <div className={"chatWindowControlSend"}>
 
