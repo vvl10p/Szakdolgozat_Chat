@@ -1,0 +1,31 @@
+.chatCardHeader{
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.chatCardContainer{
+    height: 10vh;
+    display:inline-grid;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.chatCardAvatar{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 20%;
+}
+
+.chatCardUsernameContainer{
+    font-size: 24px;
+}
+
+.chatCardMessageContainer{
+    font-size: 20px;
+}
+
+.chatCardTimeContainer{
+    font-size: 16px;
+}
