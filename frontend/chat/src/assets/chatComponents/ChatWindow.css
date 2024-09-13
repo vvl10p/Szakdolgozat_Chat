@@ -29,3 +29,14 @@
     height: 10vh;
     background-color: #444;
 }
+
+.chatWindowControlInputContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.chatWindowControlInputField{
+    resize: none;
+}

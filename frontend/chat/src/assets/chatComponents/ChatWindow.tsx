@@ -1,10 +1,10 @@
 import "./ChatWindow.css"
-//import {useState} from "react";
+import {useState} from "react";
 
 function ChatWindow(){
 
-    /*const [inputText,setInputText] = useState('')
-    const messageSendRequestOptions = {
+    const [inputText,setInputText] = useState('')
+    /*const messageSendRequestOptions = {
         method:"POST",
         headers:{"Content-type":"application/json"},
         body:JSON.stringify({
@@ -31,7 +31,7 @@ function ChatWindow(){
 
                             </div>
                             <div className={"chatWindowControlInput"}>
-                                <input /*onChange={(e) => setInputText(e.target.value)}*/ placeholder={"Type your message here!"}></input>
+                                <textarea className={"chatWindowControlInputField"} onChange={(e)=>(setInputText(e.target.value))} placeholder={"type your message here!"}></textarea>
                             </div>
                             <div className={"chatWindowControlSend"}>
 

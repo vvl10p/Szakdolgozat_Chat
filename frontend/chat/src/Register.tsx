@@ -5,17 +5,18 @@ import {Link,useNavigate} from "react-router-dom";
 function Register(){
 
     async function handleRegisterRequest(){
-        await fetch("http://localhost:5174/register",requestOptions).then((res => {
+        const res = await fetch("http://localhost:5174/register",requestOptions)
+        if(username != '' && email != '') {
             if(res.ok){
-                navigate("/chat")
-                setVisible(false);
-                return res.json();
+                setVisible(false)
+                navigate("/login")
+                return res.json()
             }
-            else {
-                setVisible(true);
-                return res.json();
+            else{
+                setVisible(true)
+                return res.json()
             }
-        }))
+        }
     }
 
     const navigate = useNavigate();

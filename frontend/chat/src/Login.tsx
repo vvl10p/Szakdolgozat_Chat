@@ -8,19 +8,18 @@ function Login(){
     const [visible,setVisible]=useState(false);
 
     async function handleLoginRequest(){
-        await fetch("http://localhost:5174/login",requestOptions).then((res => {
-            if(res.ok){
-                navigate("/chat")
-                setVisible(false);
-                return res.json();
-            }
-            else {
-                setVisible(true);
-                return res.json();
-            }
-        }))
+        const res = await fetch("http://localhost:5174/login",requestOptions)
+        if(res.ok){
+            localStorage.setItem("jwt",(await res.json()).token)
+            setVisible(false)
+            navigate("/chat")
+            return res.json()
+        }
+        else {
+            setVisible(true)
+            return res.json()
+        }
     }
-
 
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
