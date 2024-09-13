@@ -1,11 +1,6 @@
 import "./Sidebar.css"
-import {useNavigate} from "react-router-dom";
+//import {useNavigate} from "react-router-dom";
 import ChatCard from "./ChatCard.tsx";
-//import SettingsIcon from '@mui/icons-material/Settings';
-/*import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';*/
 
 export default function Sidebar(){
 
@@ -19,7 +14,7 @@ export default function Sidebar(){
         )
     }
 
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     return (
         <>
@@ -35,7 +30,7 @@ export default function Sidebar(){
                     </div>
                 </div>
                 <div className={"sidebarFooter"}>
-                    <div className={"sidebarContent sidebarButton"} onClick={() => navigate("/settings")}>
+                    <div className={"sidebarContent sidebarButton"} onClick={()=>(null)}>
                         <span className={"material-icons sidebarSettingsIcon"}>settings</span>
                         <span className={"sidebarSettingsText"}>Settings</span>
                     </div>

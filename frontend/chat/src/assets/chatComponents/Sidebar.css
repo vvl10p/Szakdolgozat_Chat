@@ -42,11 +42,16 @@ body{
     width: 100%;
 }
 
+.sidebarButton{
+    padding: 0 0.5rem 0 0.5rem;
+}
+
 .sidebarButton:hover{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60%;
+    width: fit-content;
+    padding: 0 0.5rem 0 0.5rem;
     border: #555555 0 solid;
     border-radius: 15px;
     background-color: #555555;
