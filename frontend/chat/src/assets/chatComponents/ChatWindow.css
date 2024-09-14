@@ -42,7 +42,6 @@
 }
 
 .chatWindowControlInputField{
-    resize: none;
     width: 40rem;
     background-color: #555555;
     color: white;
@@ -50,6 +49,8 @@
     border: none;
     border-radius: 8px;
     height: 2.5rem;
+    font-size: 1.3em;
+    padding: 0 1rem 0 1rem;
 }
 
 .chatWindowControlInputField:hover{
@@ -57,11 +58,7 @@
 }
 
 .chatWindowControlInputField:focus-visible{
-    resize: none;
-    width: 40rem;
     background-color: #666666;
-    color: white;
-    text-align: left;
     outline: #390096 2px solid;
 }
 

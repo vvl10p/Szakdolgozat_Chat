@@ -48,7 +48,7 @@ function ChatWindow(){
                                 <input type='file' id='file' ref={openFileExplorer} style={{display: 'none'}}/>
                             </div>
                             <div className={"chatWindowControlInput"}>
-                                <textarea className={"chatWindowControlInputField"} onChange={(e)=>(setInputText(e.target.value))} defaultValue={inputText} placeholder={"type your message here!"}></textarea>
+                                <input className={"chatWindowControlInputField"} onChange={(e)=>(setInputText(e.target.value))} defaultValue={inputText} placeholder={"type your message here!"}></input>
                             </div>
                             <div className={"chatWindowControlSend"}>
                                 <button className={"chatWindowControlButton"}>
