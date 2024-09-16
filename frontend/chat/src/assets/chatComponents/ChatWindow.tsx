@@ -13,14 +13,39 @@ function ChatWindow(){
         openFileExplorer.current.click()
     };
 
-    /*const messageSendRequestOptions = {
+    /*
+    const messageGetRequestOptions = {
+        method:"GET",
+        headers:{"Content-type":"application/json","jwt":localStorage.getItem("jwt")},
+        body:JSON.stringify({
+            message: ms
+        }
+        )
+    }
+
+    const messageSendRequestOptions = {
         method:"POST",
         headers:{"Content-type":"application/json","jwt":localStorage.getItem("jwt")},
         body:JSON.stringify({
-            message:inputText
+            SenderId:       localStorage.getItem("jwt"),
+		    RecipientId:    RecipientId,
+		    Content:        Content,
+		    ConversationId: ConversationId,
         }
-        )}
+        )
+    }
+
+      async function sendMessage() {
+        const res = await fetch("http://localhost:5174/sendMessages",messageSendRequestOptions)
+        if(res.ok) {
+            return res.json()
+        }
+        else{
+            return res.json()
+        }
+      }
 */
+
     return (
         <>
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"

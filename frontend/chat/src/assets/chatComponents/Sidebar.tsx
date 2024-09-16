@@ -4,6 +4,27 @@ import ChatCard from "./ChatCard.tsx";
 
 export default function Sidebar(){
 
+    /*const getFriendsRequestOptions = {
+        method:"POST",
+        headers:{"Content-type":"application/json","jwt":localStorage.getItem("jwt")},
+        body:JSON.stringify({
+            id:id,
+            username:username,
+            lastMessage:lastMessage
+        }
+        )
+    }
+
+    async function getFriends(){
+        const res = await fetch("http://localhost:5174/getFriends",getFriendsRequestOptions)
+        if(res.ok){
+            return res.json()
+        }
+        else{
+            return res.json()
+        }
+    }*/
+
     function mapChats(){
         return (
             <>

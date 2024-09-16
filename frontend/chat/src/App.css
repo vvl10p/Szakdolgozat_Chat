@@ -1,9 +1,10 @@
 body{
-    background-color:#333;
+    color: #fff;
     font-family: "JetBrains Mono", monospace;
 }
 
 .mainWrapper{
+    background-image: linear-gradient(to bottom right, #d17c7d,#af5972,#8d3b6a,#6b2460);
     width:100%;
     display: flex;
     justify-content: center;
@@ -14,10 +15,12 @@ body{
 }
 
 .mainContainer{
-    height: 60vh;
-    background-color: #555555;
+    background-color: rgba(140, 140, 140, 0.2);
+    backdrop-filter: blur(8px);
+    height: 70vh;
+    border: 1px solid #fff;
     border-radius: 10px;
-    width:50%;
+    width:60%;
     display:flex;
     flex-direction: column;
     justify-content: center;
@@ -25,30 +28,29 @@ body{
 }
 
 .mainHeaderContainer{
-    color:white;
-    font-size: 38px;
+    font-size: 2.5em;
     font-weight: bold;
 }
 
 .mainContentContainer button, .mainContentContainer button:visited{
     margin:auto 10vh;
-    background-color:#444;
+    color: #fff;
+    background-color: #8d3b6a;
     border-radius: 10px;
-    border: 2px solid #333;
+    border: 2px solid #6b2460;
     height: 6vh;
     width: 16vh;
     font-family: "JetBrains Mono", monospace;
-    color:white;
     text-decoration: none;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 1.3em;
     min-height: fit-content;
     min-width: fit-content;
 }
 
 .mainContentContainer button:hover{
-    background-color: #333;
-    border: 2px solid #222;
+    background-color: #6b2460;
+    border: 2px solid #421249;
     text-decoration: white;
     cursor: pointer;
 }

@@ -18,8 +18,8 @@ func NewHandler(store types.MessageStore) *Handler {
 }
 
 func (handler *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/message", handler.handleGetMessage).Methods(http.MethodGet)
-	router.HandleFunc("/message", handler.handleSendMessage).Methods(http.MethodPost)
+	router.HandleFunc("/getMessage", handler.handleGetMessage).Methods(http.MethodGet)
+	router.HandleFunc("/sendMessage", handler.handleSendMessage).Methods(http.MethodPost)
 }
 
 func (handler *Handler) handleGetMessage(w http.ResponseWriter, r *http.Request) {

@@ -13,19 +13,19 @@
 }
 
 .chatCardAvatar{
-    width: 2rem;
-    height: 2rem;
-    border-radius: 20%;
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 50%;
 }
 
 .chatCardUsernameContainer{
-    font-size: 24px;
+    font-size: 0.8em;
 }
 
 .chatCardMessageContainer{
-    font-size: 20px;
+    font-size: 0.5em;
 }
 
 .chatCardTimeContainer{
-    font-size: 16px;
+    font-size: 0.4em;
 }
