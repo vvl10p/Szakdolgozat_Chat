@@ -1,9 +1,11 @@
 import "./Sidebar.css"
 //import {useNavigate} from "react-router-dom";
 import ChatCard from "./ChatCard.tsx";
+import {useNavigate} from "react-router-dom";
 
 export default function Sidebar(){
 
+    const navigate = useNavigate()
     /*const getFriendsRequestOptions = {
         method:"POST",
         headers:{"Content-type":"application/json","jwt":localStorage.getItem("jwt")},
@@ -51,7 +53,7 @@ export default function Sidebar(){
                     </div>
                 </div>
                 <div className={"sidebarFooter"}>
-                    <div className={"sidebarContent sidebarButton"} onClick={()=>(null)}>
+                    <div className={"sidebarContent sidebarButton"} onClick={()=>{navigate("/settings")}}>
                         <span className={"material-icons sidebarSettingsIcon"}>settings</span>
                         <span className={"sidebarSettingsText"}>Settings</span>
                     </div>

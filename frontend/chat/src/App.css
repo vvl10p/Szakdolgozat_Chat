@@ -25,11 +25,13 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .mainHeaderContainer{
     font-size: 2.5em;
     font-weight: bold;
+    text-align: center;
 }
 
 .mainContentContainer button, .mainContentContainer button:visited{

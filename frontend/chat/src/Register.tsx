@@ -1,6 +1,7 @@
 import './Register.css'
 import {useState} from "react";
 import {Link,useNavigate} from "react-router-dom";
+import {ThemeProvider} from "./context/context.tsx";
 
 function Register(){
 
@@ -42,6 +43,7 @@ function Register(){
 
     return(
         <>
+            <ThemeProvider>
             <div className={"registerWrapper"}>
                 <div className={"registerContainer"}>
                     <form className={"registerForm"}>
@@ -78,6 +80,7 @@ function Register(){
                     </form>
                 </div>
             </div>
+            </ThemeProvider>
         </>
     )
 }

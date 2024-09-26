@@ -7,6 +7,7 @@ import Login from "./Login.tsx";
 import Register from "./Register.tsx";
 import Chat from "./Chat.tsx";
 import Settings from "./Settings.tsx";
+import Display from "./settings/display.tsx";
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -32,6 +33,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route
                   path={"/settings"}
                   element={<Settings/>}
+              />
+              <Route
+                  path={"/display"}
+                  element={<Display/>}
               />
           </Routes>
       </BrowserRouter>

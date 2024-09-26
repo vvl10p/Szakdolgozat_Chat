@@ -1,6 +1,7 @@
 import './Login.css'
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import {ThemeProvider} from "./context/context.tsx";
 
 function Login(){
 
@@ -34,6 +35,7 @@ function Login(){
 
     return(
         <>
+            <ThemeProvider>
             <div className={"loginContainer"}>
                 <form className={"loginForm"}>
                     <label>Username</label>
@@ -53,6 +55,7 @@ function Login(){
                     </div>
                 </form>
             </div>
+            </ThemeProvider>
         </>
     )
 }
