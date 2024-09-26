@@ -2,9 +2,9 @@ import './ChatCard.css'
 import placeHolderImage from "./placeholder_avatar.png"
 
 function ChatCard() {
-    const formattedTime = new Date().getHours().toString().padStart(2,"0")+":"+new Date().getMinutes().toString().padStart(2,"0");
+    const formattedTime = new Date().getHours().toString().padStart(2, "0") + ":" + new Date().getMinutes().toString().padStart(2, "0");
 
-    return(
+    return (
         <>
             <div className={"chatCardContainer"}>
                 <div className={"chatCardHeader"}>

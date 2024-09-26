@@ -1,12 +1,12 @@
-import {ThemeProvider} from "../context/context.tsx";
-import Content from "./displayContent.tsx";
 import "./display.css"
+import {useTheme} from "../context/context.tsx";
 
-function Display(){
+function Display() {
+    const {theme, toggleTheme} = useTheme()
     return (
-        <ThemeProvider>
-                <Content/>
-        </ThemeProvider>
+        <div>
+            <button onClick={toggleTheme}>{theme === "dark" ? "light" : "dark"}</button>
+        </div>
     )
 }
 

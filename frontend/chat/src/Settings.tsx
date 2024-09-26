@@ -1,18 +1,18 @@
 import "./Settings.css"
 import "./settings/display.tsx"
-import {ThemeProvider} from "./context/context.tsx";
 
 function Settings() {
-    return(
+
+    return (
         <>
-            <ThemeProvider>
             <div className={"settingsContainer"}>
                 <div className={"settingsSidebarContainer"}>
                     <div className={"settingsSidebarHeader"}>
-                        <span>Sidebar Header</span>
+                        <span>Settings</span>
                     </div>
                     <div className={"settingsSidebarContent"}>
                         <span>Display</span>
+                        <span>User settings</span>
                     </div>
                 </div>
                 <div className={"settingsMainContainer"}>
@@ -24,7 +24,6 @@ function Settings() {
                     </div>
                 </div>
             </div>
-            </ThemeProvider>
         </>
     )
 }

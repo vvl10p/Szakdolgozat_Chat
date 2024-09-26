@@ -1,56 +1,44 @@
 import './Register.css'
 import {useState} from "react";
-import {Link,useNavigate} from "react-router-dom";
-import {ThemeProvider} from "./context/context.tsx";
+import {Link, useNavigate} from "react-router-dom";
+import {Register as RegisterAPI} from "./API/auth.ts";
 
-function Register(){
+function Register() {
 
-    async function handleRegisterRequest(){
-        const res = await fetch("http://localhost:5174/register",requestOptions)
-        if(username != '' && email != '') {
-            if(res.ok){
+    async function handleRegisterRequest() {
+        if (username != '' && email != '') {
+            try {
+                const res = await RegisterAPI(username, password, email)
                 setVisible(false)
                 navigate("/login")
-                return res.json()
-            }
-            else{
+                return res
+            } catch (err) {
                 setVisible(true)
-                return res.json()
             }
         }
     }
 
     const navigate = useNavigate();
-    const [visible,setVisible] = useState(false);
-    const [username,setUsername] = useState('')
-    const [password,setPassword] = useState('')
-    const [confPass,setConfPass] = useState('')
-    const [email,setEmail] = useState('')
+    const [visible, setVisible] = useState(false);
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [confPass, setConfPass] = useState('')
+    const [email, setEmail] = useState('')
 
-    const requestOptions = {
-        method:"POST",
-        headers:{"Content-type":"application/json"},
-        body: JSON.stringify({
-            username:username,
-            password:password,
-            email:email
-        })
-    }
-
-    function matchPassword(password:string,confPass:string){
+    function matchPassword(password: string, confPass: string) {
         return password == confPass;
     }
 
-    return(
+    return (
         <>
-            <ThemeProvider>
             <div className={"registerWrapper"}>
                 <div className={"registerContainer"}>
                     <form className={"registerForm"}>
                         <label>Email</label>
-                        <input className={"registerInput"} type={email} placeholder={"Email"} required={true} onChange={event => {
-                            setEmail(event.target.value)
-                        }}/>
+                        <input className={"registerInput"} type={email} placeholder={"Email"} required={true}
+                               onChange={event => {
+                                   setEmail(event.target.value)
+                               }}/>
                         <label>Username</label>
                         <input className={"registerInput"} type={"text"} placeholder={"Username"} onChange={event => {
                             setUsername(event.target.value)
@@ -80,7 +68,6 @@ function Register(){
                     </form>
                 </div>
             </div>
-            </ThemeProvider>
         </>
     )
 }

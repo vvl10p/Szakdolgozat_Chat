@@ -1,11 +1,11 @@
-.registerWrapper{
+.registerWrapper {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(to bottom right, #d17c7d,#af5972,#8d3b6a,#6b2460);
+    background-image: linear-gradient(to bottom right, #d17c7d, #af5972, #8d3b6a, #6b2460);
     color: #fff;
 }
 
-.registerContainer{
+.registerContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -16,7 +16,7 @@
     min-width: fit-content;
 }
 
-.registerForm{
+.registerForm {
     background-color: rgba(140, 140, 140, 0.2);
     backdrop-filter: blur(8px);
     height: 70vh;
@@ -31,15 +31,15 @@
     min-width: fit-content;
 }
 
-.registerForm label{
-    display:block;
+.registerForm label {
+    display: block;
     color: white;
     font-size: 1.2em;
     width: 70vh;
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerForm input{
+.registerForm input {
     width: 68vh;
     height: 4vh;
     margin: 1vh 0;
@@ -52,7 +52,7 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerForm input:focus{
+.registerForm input:focus {
     background-color: #6b2460;
     border: 2px solid #421249;
     text-align: left;
@@ -60,12 +60,12 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerForm input:hover{
+.registerForm input:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
 }
 
-.registerForm button{
+.registerForm button {
     width: 70.5vh;
     margin-top: 1vh;
     background-color: #8d3b6a;
@@ -81,24 +81,24 @@
     min-width: fit-content;
 }
 
-.registerForm button:hover{
+.registerForm button:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
     text-decoration: white;
     cursor: pointer;
 }
 
-.errorMessage{
-    color:#ce1010;
+.errorMessage {
+    color: #ce1010;
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerFooter{
+.registerFooter {
     font-family: "JetBrains Mono", monospace;
     color: #fff;
 }
 
-.registerFooter a, .registerFooter a:visited, .registerFooter a:active{
+.registerFooter a, .registerFooter a:visited, .registerFooter a:active {
     color: #390096;
     text-decoration: none;
     font-weight: bold;

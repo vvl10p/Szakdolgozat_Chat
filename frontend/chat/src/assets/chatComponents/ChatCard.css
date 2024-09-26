@@ -1,31 +1,31 @@
-.chatCardHeader{
+.chatCardHeader {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
 }
 
-.chatCardContainer{
+.chatCardContainer {
     height: 10vh;
-    display:inline-grid;
+    display: inline-grid;
     flex-wrap: wrap;
     width: 100%;
 }
 
-.chatCardAvatar{
+.chatCardAvatar {
     width: 1.2em;
     height: 1.2em;
     border-radius: 50%;
 }
 
-.chatCardUsernameContainer{
+.chatCardUsernameContainer {
     font-size: 0.8em;
 }
 
-.chatCardMessageContainer{
+.chatCardMessageContainer {
     font-size: 0.5em;
 }
 
-.chatCardTimeContainer{
+.chatCardTimeContainer {
     font-size: 0.4em;
 }

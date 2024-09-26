@@ -7,12 +7,16 @@ import (
 )
 
 type Server struct {
-	conns map[*websocket.Conn]bool
+	sessions []Session
+}
+
+type Session struct {
+    conns map[int]*websocket.Conn
 }
 
 func NewServer() *Server {
 	return &Server{
-		conns: make(map[*websocket.Conn]bool),
+		sessions: make([]Session)
 	}
 }
 

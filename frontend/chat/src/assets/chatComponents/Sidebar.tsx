@@ -2,10 +2,12 @@ import "./Sidebar.css"
 //import {useNavigate} from "react-router-dom";
 import ChatCard from "./ChatCard.tsx";
 import {useNavigate} from "react-router-dom";
+import SettingsIcon from '@mui/icons-material/Settings';
 
-export default function Sidebar(){
+export default function Sidebar() {
 
     const navigate = useNavigate()
+
     /*const getFriendsRequestOptions = {
         method:"POST",
         headers:{"Content-type":"application/json","jwt":localStorage.getItem("jwt")},
@@ -27,10 +29,12 @@ export default function Sidebar(){
         }
     }*/
 
-    function mapChats(){
+    function mapChats() {
         return (
             <>
-                <div className={"sidebarContent"}>
+                <div className={"sidebarContent"} onClick={() => {
+                    navigate(location.pathname + "?id=1")
+                }}>
                     <ChatCard/>
                 </div>
             </>
@@ -41,8 +45,6 @@ export default function Sidebar(){
 
     return (
         <>
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-                  rel="stylesheet"/>
             <div className={"sidebarContainer"}>
                 <div className={"sidebarHeader"}>
                     <span>Messages</span>
@@ -53,8 +55,10 @@ export default function Sidebar(){
                     </div>
                 </div>
                 <div className={"sidebarFooter"}>
-                    <div className={"sidebarContent sidebarButton"} onClick={()=>{navigate("/settings")}}>
-                        <span className={"material-icons sidebarSettingsIcon"}>settings</span>
+                    <div className={"sidebarContent sidebarButton"} onClick={() => {
+                        navigate("/settings")
+                    }}>
+                        <SettingsIcon className={"sidebarSettingsIcon"}/>
                         <span className={"sidebarSettingsText"}>Settings</span>
                     </div>
                     <span>ChatApp</span>

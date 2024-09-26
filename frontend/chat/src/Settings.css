@@ -1,16 +1,16 @@
-.settingsContainer{
+.settingsContainer {
     width: 100%;
     height: 100vh;
     display: flex;
 }
 
-.settingsSidebarContainer{
+.settingsSidebarContainer {
     width: 20%;
-    height:100vh;
+    height: 100vh;
     background-color: #555555;
 }
 
-.settingsSidebarHeader{
+.settingsSidebarHeader {
     height: 10vh;
     font-size: 1.5em;
     display: flex;
@@ -18,25 +18,25 @@
     justify-content: center;
 }
 
-.settingsSidebarContent{
+.settingsSidebarContent {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height:5vh;
+    height: 5vh;
 }
 
-.settingsSidebarContent:hover{
+.settingsSidebarContent:hover {
     background-color: #333333;
 }
 
-.settingsMainContainer{
+.settingsMainContainer {
     width: 80%;
     height: 100vh;
     background-color: #444444;
 }
 
-.settingsMainHeader{
+.settingsMainHeader {
     height: 10vh;
     font-size: 1.5em;
     display: flex;
@@ -44,7 +44,7 @@
     justify-content: center;
 }
 
-.settingsMainContent{
+.settingsMainContent {
 
 }
 

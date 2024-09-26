@@ -1,4 +1,4 @@
-body{
+body {
     background-color: #333;
     color: #fff;
     font-family: "JetBrains Mono", monospace;
@@ -7,7 +7,7 @@ body{
     display: block;
 }
 
-.sidebarHeader{
+.sidebarHeader {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,7 @@ body{
     width: 100%;
 }
 
-.sidebarContainer{
+.sidebarContainer {
     background-color: #333;
     font-size: 24px;
     height: 100%;
@@ -23,7 +23,7 @@ body{
     flex-direction: column;
 }
 
-.sidebarContentContainer{
+.sidebarContentContainer {
     background-color: #444444;
     height: 80%;
     width: 100%;
@@ -33,7 +33,7 @@ body{
     align-items: center;
 }
 
-.sidebarFooter{
+.sidebarFooter {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -42,11 +42,11 @@ body{
     width: 100%;
 }
 
-.sidebarButton{
+.sidebarButton {
     padding: 0 0.5rem 0 0.5rem;
 }
 
-.sidebarButton:hover{
+.sidebarButton:hover {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -57,30 +57,26 @@ body{
     background-color: #555555;
 }
 
-.sidebarBrandContainer:visited{
+.sidebarBrandContainer:visited {
     text-decoration: none;
 }
 
-.sidebarContent{
+.sidebarContent {
     margin-top: 5%;
     display: inline-flex;
     justify-content: center;
     align-items: center;
 }
 
-.sidebarContent:hover{
+.sidebarContent:hover {
     cursor: pointer;
 }
 
-.sidebarSettingsIcon{
+.sidebarButton .sidebarSettingsIcon {
     margin-right: 0.5rem;
     transition: transform 0.5s ease-in-out;
 }
 
-.sidebarButton:hover .sidebarSettingsIcon{
+.sidebarButton:hover .sidebarSettingsIcon {
     transform: rotate(270deg);
-}
-
-.sidebarButton .sidebarSettingsIcon{
-    transform: rotate(0deg);
 }

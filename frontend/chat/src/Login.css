@@ -1,4 +1,4 @@
-.loginForm{
+.loginForm {
     background-color: rgba(140, 140, 140, 0.2);
     backdrop-filter: blur(8px);
     height: 70vh;
@@ -13,10 +13,10 @@
     min-width: fit-content;
 }
 
-.loginContainer{
+.loginContainer {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(to bottom right, #d17c7d,#af5972,#8d3b6a,#6b2460);
+    background-image: linear-gradient(to bottom right, #d17c7d, #af5972, #8d3b6a, #6b2460);
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -24,7 +24,7 @@
     align-items: center;
 }
 
-.loginForm input{
+.loginForm input {
     color: white;
     width: 68vh;
     height: 4vh;
@@ -37,7 +37,7 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.loginForm input:focus{
+.loginForm input:focus {
     background-color: #6b2460;
     border: 2px solid #421249;
     text-align: left;
@@ -46,12 +46,12 @@
     color: white;
 }
 
-.loginForm input:hover{
+.loginForm input:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
 }
 
-.loginForm button{
+.loginForm button {
     width: 70.5vh;
     margin-top: 1vh;
     background-color: #8d3b6a;
@@ -67,32 +67,32 @@
     min-width: fit-content;
 }
 
-.loginContainer button:hover{
+.loginContainer button:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
     text-decoration: white;
     cursor: pointer;
 }
 
-.loginForm label{
-    display:block;
-    color:white;
+.loginForm label {
+    display: block;
+    color: white;
     font-size: 1.2rem;
     width: 70vh;
     font-family: "JetBrains Mono", monospace;
 }
 
-.errorMessage{
-    color:#ce1010;
+.errorMessage {
+    color: #ce1010;
     font-family: "JetBrains Mono", monospace;
 }
 
-.loginFooter{
+.loginFooter {
     font-family: "JetBrains Mono", monospace;
-    color:white;
+    color: white;
 }
 
-.loginFooter a{
+.loginFooter a {
     color: #390096;
     text-decoration: none;
     cursor: pointer;

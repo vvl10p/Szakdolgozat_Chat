@@ -1,45 +1,35 @@
 import './Login.css'
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {ThemeProvider} from "./context/context.tsx";
+import {Login as LoginAPI} from "./API/auth.ts";
 
-function Login(){
+function Login() {
 
     const navigate = useNavigate();
-    const [visible,setVisible]=useState(false);
+    const [visible, setVisible] = useState(false);
 
-    async function handleLoginRequest(){
-        const res = await fetch("http://localhost:5174/login",requestOptions)
-        if(res.ok){
-            localStorage.setItem("jwt",(await res.json()).token)
+    async function handleLoginRequest() {
+        try {
+            const res = await LoginAPI(username, password)
+            localStorage.setItem("jwt", (res.token))
             setVisible(false)
             navigate("/chat")
-            return res.json()
-        }
-        else {
+            return res
+        } catch (err) {
             setVisible(true)
-            return res.json()
         }
     }
 
-    const [username,setUsername] = useState('')
-    const [password,setPassword] = useState('')
-    const requestOptions = {
-        method:"POST",
-        headers:{"Content-type":"application/json"},
-        body:JSON.stringify({
-            username:username,
-            password:password
-        })
-    }
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
-    return(
+
+    return (
         <>
-            <ThemeProvider>
             <div className={"loginContainer"}>
                 <form className={"loginForm"}>
                     <label>Username</label>
-                    <input form={"loginForm"} className={"loginInput"} type={"text"}
+                    <input form={"loginForm"} className={"loginInput"} type={"text"} name={"username"}
                            onChange={event => setUsername(event.target.value)} placeholder={"Username"} required/>
                     <label>Password</label>
                     <input form={"loginForm"} className={"loginInput"} type={"password"}
@@ -55,7 +45,6 @@ function Login(){
                     </div>
                 </form>
             </div>
-            </ThemeProvider>
         </>
     )
 }
