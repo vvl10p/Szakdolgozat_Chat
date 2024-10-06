@@ -34,6 +34,7 @@
 }
 
 .chatWindowControlInputContainer {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,14 +44,22 @@
 
 .chatWindowControlInputField {
     width: 40rem;
+    max-width: 40rem;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    box-sizing: border-box;
     background-color: #555555;
-    color: white;
-    text-align: left;
+    resize: none;
+    outline: none;
     border: none;
-    border-radius: 8px;
-    height: 2.5rem;
-    font-size: 1.3em;
-    padding: 0 1rem 0 1rem;
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    overflow: hidden;
+    line-height: 1.5;
+    color: white;
+    transform-origin: bottom;
 }
 
 .chatWindowControlInputField:hover {
@@ -88,4 +97,63 @@
     height: 2.5rem;
     width: 2.5rem;
     margin: 0 0.5rem 0 0.5rem;
+}
+
+.chatWindowControlInputPreviewImage {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+
+
+.chatWindowControlInputImageContainer {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background: #444444;
+    border: 2px solid #333333;
+    margin-top: -9.65rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.chatWindowControlInputPreviewImageRemove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background: none;
+}
+
+.chatWindowControlInputPreviewFile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 12px;
+}
+
+
+.chatWindowControlInputFileContainer {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background: #444444;
+    border: 2px solid #333333;
+    margin-top: -9.65rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.chatWindowControlInputPreviewContainer {
+    display: flex;
 }

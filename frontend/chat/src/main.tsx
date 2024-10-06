@@ -2,14 +2,26 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import {Routes, Route, BrowserRouter} from 'react-router-dom'
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import Login from "./Login.tsx";
 import Register from "./Register.tsx";
 import Chat from "./Chat.tsx";
 import Settings from "./Settings.tsx";
-import Display from "./settings/display.tsx";
-import {ThemeProvider} from "./context/context.tsx";
+import Display from "./settings/Display.tsx";
+import {ThemeProvider} from "./context/Context.tsx";
 
+interface PrivateRouteProps {
+    children: React.ReactNode
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({children}) => {
+    const token = localStorage.getItem("jwt")
+
+    if (!token) {
+        return <Navigate to={"/login"} replace/>
+    }
+    return <>{children}</>
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
@@ -30,15 +42,27 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                     />
                     <Route
                         path={"/chat"}
-                        element={<Chat/>}
+                        element={
+                            <PrivateRoute>
+                                <Chat/>
+                            </PrivateRoute>
+                        }
                     />
                     <Route
                         path={"/settings"}
-                        element={<Settings/>}
+                        element={
+                            <PrivateRoute>
+                                <Settings/>
+                            </PrivateRoute>
+                        }
                     />
                     <Route
                         path={"/display"}
-                        element={<Display/>}
+                        element={
+                            <PrivateRoute>
+                                <Display/>
+                            </PrivateRoute>
+                        }
                     />
                 </Routes>
             </ThemeProvider>

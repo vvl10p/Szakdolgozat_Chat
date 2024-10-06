@@ -5,6 +5,13 @@
     color: #fff;
 }
 
+.registerWrapperDark {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(to bottom right, #d17c7d, #af5972, #8d3b6a, #6b2460);
+    color: #fff;
+}
+
 .registerContainer {
     display: flex;
     flex-direction: column;
@@ -14,6 +21,10 @@
     width: 100%;
     min-height: fit-content;
     min-width: fit-content;
+}
+
+.registerContainerDark {
+
 }
 
 .registerForm {
@@ -31,12 +42,20 @@
     min-width: fit-content;
 }
 
+.registerFormDark {
+
+}
+
 .registerForm label {
     display: block;
     color: white;
     font-size: 1.2em;
     width: 70vh;
     font-family: "JetBrains Mono", monospace;
+}
+
+.registerFormDark label {
+
 }
 
 .registerForm input {
@@ -52,6 +71,10 @@
     font-family: "JetBrains Mono", monospace;
 }
 
+.registerFormDark input {
+
+}
+
 .registerForm input:focus {
     background-color: #6b2460;
     border: 2px solid #421249;
@@ -60,9 +83,17 @@
     font-family: "JetBrains Mono", monospace;
 }
 
+.registerFormDark input:focus {
+
+}
+
 .registerForm input:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
+}
+
+.registerFormDark input:hover {
+
 }
 
 .registerForm button {
@@ -81,11 +112,19 @@
     min-width: fit-content;
 }
 
+.registerFormDark button {
+
+}
+
 .registerForm button:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
     text-decoration: white;
     cursor: pointer;
+}
+
+.registerFormDark button:hover {
+
 }
 
 .errorMessage {
@@ -98,7 +137,15 @@
     color: #fff;
 }
 
-.registerFooter a, .registerFooter a:visited, .registerFooter a:active {
+.registerFooterDark {
+
+}
+
+.registerFooterDark span, .registerFooterDark span:visited, .registerFooterDark span:active {
+
+}
+
+.registerFooter span, .registerFooter span:visited, .registerFooter span:active {
     color: #390096;
     text-decoration: none;
     font-weight: bold;

@@ -1,12 +1,20 @@
 import './Login.css'
 import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {Login as LoginAPI} from "./API/auth.ts";
+import {useTheme} from "./context/Context.tsx";
 
 function Login() {
 
+    const {theme} = useTheme()
     const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            handleLoginRequest()
+        }
+    }
 
     async function handleLoginRequest() {
         try {
@@ -26,21 +34,24 @@ function Login() {
 
     return (
         <>
-            <div className={"loginContainer"}>
-                <form className={"loginForm"}>
+            <div className={theme === "dark" ? "loginContainerDark" : "loginContainer"} onKeyDown={handleKeyDown}>
+                <form className={theme === "dark" ? "loginFormDark" : "loginForm"}>
                     <label>Username</label>
-                    <input form={"loginForm"} className={"loginInput"} type={"text"} name={"username"}
+                    <input form={theme === "dark" ? "loginFormDak" : "loginForm"}
+                           className={theme === "dark" ? "loginInputDark" : "loginInput"} type={"text"}
+                           name={"username"}
                            onChange={event => setUsername(event.target.value)} placeholder={"Username"} required/>
                     <label>Password</label>
-                    <input form={"loginForm"} className={"loginInput"} type={"password"}
+                    <input form={"loginForm"} className={theme === "dark" ? "loginInputDark" : "loginInput"}
+                           type={"password"}
                            onChange={event => setPassword(event.target.value)} placeholder={"Password"} required/>
                     <button type={"button"} onClick={() => handleLoginRequest()}>Log in</button>
-                    <div className={'errorMessageContainer'} hidden={!visible}>
-                        <p className={'errorMessage'}>Invalid username or password</p>
+                    <div className={"errorMessageContainer"} hidden={!visible}>
+                        <p className={"errorMessage"}>Invalid username or password</p>
                     </div>
-                    <div className={"loginFooter"}>
-                        <p className={"loginFooterText"}>
-                            Don't have an account? <Link to={"/register"}>Create one</Link>
+                    <div className={theme === "dark" ? "loginFooterDark" : "loginFooter"}>
+                        <p className={theme === "dark" ? "loginFooterTextDark" : "loginFooterText"}>
+                            Don't have an account? <span onClick={() => navigate('/register')}>Create one</span>
                         </p>
                     </div>
                 </form>

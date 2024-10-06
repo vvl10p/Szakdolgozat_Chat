@@ -1,6 +1,6 @@
 import './App.css'
 import {useNavigate} from "react-router-dom";
-import {ThemeProvider} from "./context/context.tsx";
+import {useTheme} from "./context/Context.tsx";
 
 function App() {
     const navigate = useNavigate();
@@ -9,21 +9,21 @@ function App() {
         navigate(url);
     }
 
+    const {theme} = useTheme()
+
     return (
         <>
-            <ThemeProvider>
-                <div className={"mainWrapper"}>
-                    <div className={"mainContainer"}>
-                        <div className={"mainHeaderContainer"}>
-                            <p>Create an account or login in</p>
-                        </div>
-                        <div className={"mainContentContainer"}>
-                            <button onClick={() => handleNavigate('/login')}>Log in</button>
-                            <button onClick={() => handleNavigate('/register')}>Register</button>
-                        </div>
+            <div className={theme === "dark" ? "mainWrapperDark" : "mainWrapper"}>
+                <div className={theme === "dark" ? "mainContainerDark" : "mainContainer"}>
+                    <div className={theme === "dark" ? "mainHeaderContainerDark" : "mainHeaderContainer"}>
+                        <p>Create an account or login in</p>
+                    </div>
+                    <div className={theme === "dark" ? "mainContentContainer" : "mainContentContainer"}>
+                        <button onClick={() => handleNavigate('/login')}>Log in</button>
+                        <button onClick={() => handleNavigate('/register')}>Register</button>
                     </div>
                 </div>
-            </ThemeProvider>
+            </div>
         </>
     )
 }

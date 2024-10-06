@@ -14,6 +14,17 @@ body {
     min-width: fit-content;
 }
 
+.mainWrapperDark {
+    background-color: #333333;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    min-height: fit-content;
+    min-width: fit-content;
+}
+
 .mainContainer {
     background-color: rgba(140, 140, 140, 0.2);
     backdrop-filter: blur(8px);
@@ -28,10 +39,18 @@ body {
     flex-wrap: wrap;
 }
 
+.mainContainerDark {
+
+}
+
 .mainHeaderContainer {
     font-size: 2.5em;
     font-weight: bold;
     text-align: center;
+}
+
+.mainHeaderContainerDark {
+
 }
 
 .mainContentContainer button, .mainContentContainer button:visited {
@@ -50,9 +69,17 @@ body {
     min-width: fit-content;
 }
 
+.mainContentContainerDark button, .mainContentContainerDark button:visited {
+
+}
+
 .mainContentContainer button:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
     text-decoration: white;
     cursor: pointer;
+}
+
+.mainContentContainerDark button:hover {
+
 }

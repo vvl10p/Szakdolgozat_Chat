@@ -1,0 +1,35 @@
+.userSettingsAvatarContainer {
+    display: grid;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: relative;
+}
+
+.userSettingsAvatarImageContainer {
+    max-height: 400px;
+    max-width: 400px;
+    cursor: pointer;
+    display: flex;
+}
+
+.userSettingsAvatarImage {
+    object-fit: contain;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.userSettingsAvatarButtonContainer {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.userSettingsAvatarButton {
+    height: 2rem;
+    width: 7rem;
+    min-height: fit-content;
+    min-width: fit-content;
+}
