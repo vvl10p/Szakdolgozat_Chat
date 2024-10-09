@@ -24,7 +24,14 @@
 }
 
 .registerContainerDark {
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    min-height: fit-content;
+    min-width: fit-content;
 }
 
 .registerForm {
@@ -43,7 +50,18 @@
 }
 
 .registerFormDark {
-
+    background-color: rgba(140, 140, 140, 0.2);
+    backdrop-filter: blur(8px);
+    height: 70vh;
+    width: 60%;
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    min-height: fit-content;
+    min-width: fit-content;
 }
 
 .registerForm label {
@@ -55,7 +73,11 @@
 }
 
 .registerFormDark label {
-
+    display: block;
+    color: white;
+    font-size: 1.2em;
+    width: 70vh;
+    font-family: "JetBrains Mono", monospace;
 }
 
 .registerForm input {
@@ -72,7 +94,16 @@
 }
 
 .registerFormDark input {
-
+    width: 68vh;
+    height: 4vh;
+    margin: 1vh 0;
+    background-color: #8d3b6a;
+    border-radius: 10px;
+    border: 2px solid #6b2460;
+    color: white;
+    font-size: 1em;
+    padding: 1vh;
+    font-family: "JetBrains Mono", monospace;
 }
 
 .registerForm input:focus {
@@ -84,7 +115,11 @@
 }
 
 .registerFormDark input:focus {
-
+    background-color: #6b2460;
+    border: 2px solid #421249;
+    text-align: left;
+    outline: none;
+    font-family: "JetBrains Mono", monospace;
 }
 
 .registerForm input:hover {
@@ -93,7 +128,8 @@
 }
 
 .registerFormDark input:hover {
-
+    background-color: #6b2460;
+    border: 2px solid #421249;
 }
 
 .registerForm button {
@@ -113,7 +149,19 @@
 }
 
 .registerFormDark button {
-
+    width: 70.5vh;
+    margin-top: 1vh;
+    background-color: #8d3b6a;
+    border-radius: 10px;
+    border: 2px solid #6b2460;
+    height: 6vh;
+    font-family: "JetBrains Mono", monospace;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    min-height: fit-content;
+    min-width: fit-content;
 }
 
 .registerForm button:hover {
@@ -124,7 +172,10 @@
 }
 
 .registerFormDark button:hover {
-
+    background-color: #6b2460;
+    border: 2px solid #421249;
+    text-decoration: white;
+    cursor: pointer;
 }
 
 .errorMessage {
@@ -138,15 +189,20 @@
 }
 
 .registerFooterDark {
-
+    font-family: "JetBrains Mono", monospace;
+    color: #fff;
 }
 
 .registerFooterDark span, .registerFooterDark span:visited, .registerFooterDark span:active {
-
+    color: #390096;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .registerFooter span, .registerFooter span:visited, .registerFooter span:active {
     color: #390096;
     text-decoration: none;
     font-weight: bold;
+    cursor: pointer;
 }

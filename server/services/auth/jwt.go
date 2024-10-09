@@ -20,3 +20,18 @@ func CreateJWT(UserID int) (string, error) {
 
 	return tokenString, nil
 }
+
+func ValidateJWT(jwtString string) (*jwt.Claims, error) {
+	token, err := jwt.Parse(jwtString, func(token *jwt.Token) (interface {},error)) {
+		if _,ok := token.Method.(*jwt.SigningMethodHS256); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"]")
+		}
+		return []byte(secret), nil
+	}
+
+	if err !=nil || !token.Valid {
+		return nil, err
+	}
+
+	return token.Claims, nil
+}

@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS User (
     Username TEXT NOT NULL,
     Email TEXT NOT NULL,
     Password TEXT NOT NULL,
+    AvatarPath TEXT,
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

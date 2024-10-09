@@ -14,6 +14,14 @@ func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
+func (store *Store) UploadAvatar(id int, pathString string) error {
+	_, err := store.db.Query("UPDATE User SET AvatarPath ? WHERE UserID=?", pathString, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (store *Store) GetUserById(id int) (*types.User, error) {
 	rows, err := store.db.Query("SELECT * FROM User WHERE UserID = ?", id)
 	if err != nil {

@@ -21,6 +21,28 @@ func NewHandler(store types.UserStore) *Handler {
 func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
+	router.HandleFunc("/avatar_upload", h.handleAvatarUpload).Methods("POST")
+}
+
+func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
+	var payload types.AvatarUploadPayload
+	if err := utils.ParseJSON(r, &payload); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := utils.Validate.Struct(payload); err != nil {
+		errors := err.(validator.ValidationErrors)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
+		return
+	}
+
+	u, err := h.store.GetUserById(payload.ID)
+	if err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("user doesn't exist"))
+		return
+	}
+	return
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {

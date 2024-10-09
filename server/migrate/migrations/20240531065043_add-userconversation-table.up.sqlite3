@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS UserConversation (
+    FOREIGN KEY (UserID) REFERENCES User(UserID),
+    FOREIGN KEY (ConversationID) REFERENCES Conversation(ConversationID)
+);

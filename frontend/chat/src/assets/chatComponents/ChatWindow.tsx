@@ -21,8 +21,8 @@ function ChatWindow() {
 
     const searchParams = useSearchParams();
     console.log(searchParams);
-    const [inputText, setInputText] = useState('')
-    const [, setLineCount] = useState(1)
+    const [inputText, setInputText] = useState<string>('')
+    const [, setLineCount] = useState<number>(1)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     const adjustHeight = () => {

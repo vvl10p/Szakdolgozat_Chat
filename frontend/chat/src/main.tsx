@@ -23,6 +23,15 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({children}) => {
     return <>{children}</>
 }
 
+/*const PrivateRouteToken: React.FC<PrivateRouteProps> = ({children}) => {
+    const token = localStorage.getItem("jwt")
+
+    if(token) {
+        return <Navigate to={"/chat"} replace/>
+    }
+    return <>{children}</>
+}*/
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <BrowserRouter>
@@ -30,15 +39,27 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Routes>
                     <Route
                         path={"/"}
-                        element={<App/>}
+                        element={
+                            //<PrivateRouteToken>
+                            <App/>
+                            //</PrivateRouteToken>
+                        }
                     />
                     <Route
                         path={"/login"}
-                        element={<Login/>}
+                        element={
+                            //<PrivateRouteToken>
+                            <Login/>
+                            //</PrivateRouteToken>
+                        }
                     />
                     <Route
                         path={"/register"}
-                        element={<Register/>}
+                        element={
+                            //<PrivateRouteToken>
+                            <Register/>
+                            //</PrivateRouteToken>
+                        }
                     />
                     <Route
                         path={"/chat"}

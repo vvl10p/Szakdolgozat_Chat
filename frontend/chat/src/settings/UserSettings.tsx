@@ -2,9 +2,16 @@ import {useTheme} from "../context/Context.tsx";
 import {useRef, useState} from "react";
 import {Box, Modal} from "@mui/material";
 import "./UserSettings.css";
+import {useNavigate} from "react-router-dom";
 
 function UserSettings() {
     const {theme} = useTheme()
+    const navigate = useNavigate()
+
+    //const token = localStorage.getItem("jwt")
+    const MAX_FILE_SIZE = 5 * 1024 * 1024
+
+    const [, setErrorMessage] = useState<string>("")
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
     const inputFileRef = useRef<HTMLInputElement | null>(null)
@@ -12,11 +19,16 @@ function UserSettings() {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
         if (file) {
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setSelectedImage(reader.result as string)
+            if (file.size > MAX_FILE_SIZE) {
+                setErrorMessage(`File size exceeds the ${(MAX_FILE_SIZE / 1024 / 1024).toFixed(2)}MB limit.`)
+                return
+            } else {
+                const reader = new FileReader()
+                reader.onloadend = () => {
+                    setSelectedImage(reader.result as string)
+                }
+                reader.readAsDataURL(file)
             }
-            reader.readAsDataURL(file)
         }
     }
 
@@ -24,6 +36,11 @@ function UserSettings() {
         if (inputFileRef.current) {
             inputFileRef.current.click()
         }
+    }
+
+    const handleLogOut = () => {
+        localStorage.removeItem("jwt")
+        navigate("/")
     }
 
     const style = {
@@ -49,53 +66,64 @@ function UserSettings() {
 
     return (
         <>
-            <button className={theme === "dark" ? "userSettingsChangeButtonDark" : "userSettingsChangeButton"}
-                    onClick={handleOpenAvatar}>Change
-                avatar
-            </button>
-            <Modal
-                open={openAvatar}
-                onClose={handleCloseAvatar}
-            >
-                <Box sx={style}>
-                    <div className={"userSettingsAvatarContainer"}>
-                        <div className={"userSettingsAvatarImageContainer"}>
-                            <img className={"userSettingsAvatarImage"}
-                                 src={selectedImage || "https://via.placeholder.com/400"} alt={"AvatarImagePlaceholder"}
-                                 onClick={handleImageClick}></img>
+            <div className={"userSettingsContainer"}>
+                <div className={"userSettingsButtonContainer"}>
+                    <button className={theme === "dark" ? "userSettingsChangeButtonDark" : "userSettingsChangeButton"}
+                            onClick={handleOpenAvatar}>Change
+                        avatar
+                    </button>
+                </div>
+                <Modal
+                    open={openAvatar}
+                    onClose={handleCloseAvatar}
+                >
+                    <Box sx={style}>
+                        <div className={"userSettingsAvatarContainer"}>
+                            <div className={"userSettingsAvatarImageContainer"}>
+                                <img className={"userSettingsAvatarImage"}
+                                     src={selectedImage || "https://via.placeholder.com/400"}
+                                     alt={"AvatarImagePlaceholder"}
+                                     onClick={handleImageClick}></img>
+                            </div>
+                            <input
+                                type={"file"}
+                                ref={inputFileRef}
+                                style={{display: "none"}}
+                                accept={"image/*"}
+                                onChange={handleFileChange}
+                            />
+                            <div className={"userSettingsAvatarButtonContainer"}>
+                                <button className={"userSettingsAvatarButton"} onClick={handleCloseAvatar}>Close
+                                </button>
+                                <button className={"userSettingsAvatarButton"}>Change avatar</button>
+                            </div>
                         </div>
-                        <input
-                            type={"file"}
-                            ref={inputFileRef}
-                            style={{display: "none"}}
-                            accept={"image/*"}
-                            onChange={handleFileChange}
-                        />
-                        <div className={"userSettingsAvatarButtonContainer"}>
-                            <button className={"userSettingsAvatarButton"} onClick={handleCloseAvatar}>Close</button>
-                            <button className={"userSettingsAvatarButton"}>Change avatar</button>
+                    </Box>
+                </Modal>
+                <div className={"userSettingsButtonContainer"}>
+                    <button className={theme === "dark" ? "userSettingsChangeButtonDark" : "userSettingsChangeButton"}
+                            onClick={handleOpenPassword}>Change
+                        password
+                    </button>
+                </div>
+                <Modal
+                    open={openPassword}
+                    onClose={handleClosePassword}
+                >
+                    <Box sx={style}>
+                        <div>
+                            <label>New password</label>
+                            <input type={"password"}></input>
+                            <label>Confirm new password</label>
+                            <input type={"password"}></input>
+                            <button>Change password</button>
                         </div>
-                    </div>
-                </Box>
-            </Modal>
-            <button className={theme === "dark" ? "userSettingsChangeButtonDark" : "userSettingsChangeButton"}
-                    onClick={handleOpenPassword}>Change
-                password
-            </button>
-            <Modal
-                open={openPassword}
-                onClose={handleClosePassword}
-            >
-                <Box sx={style}>
-                    <div>
-                        <label>New password</label>
-                        <input type={"password"}></input>
-                        <label>Confirm new password</label>
-                        <input type={"password"}></input>
-                        <button>Change password</button>
-                    </div>
-                </Box>
-            </Modal>
+                    </Box>
+                </Modal>
+                <div className={"userSettingsButtonContainer"}>
+                    <button onClick={handleLogOut}>Log out</button>
+                </div>
+            </div>
         </>
     )
 }
