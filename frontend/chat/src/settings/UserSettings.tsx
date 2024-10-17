@@ -56,11 +56,11 @@ function UserSettings() {
         p: 4,
     }
 
-    const [openPassword, setOpenPassword] = useState(false)
+    const [openPassword, setOpenPassword] = useState<boolean>(false)
     const handleOpenPassword = () => setOpenPassword(true)
     const handleClosePassword = () => setOpenPassword(false)
 
-    const [openAvatar, setOpenAvatar] = useState(false)
+    const [openAvatar, setOpenAvatar] = useState<boolean>(false)
     const handleOpenAvatar = () => setOpenAvatar(true)
     const handleCloseAvatar = () => setOpenAvatar(false)
 

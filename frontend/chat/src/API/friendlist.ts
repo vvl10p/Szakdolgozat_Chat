@@ -1,34 +1,34 @@
-export async function AvatarUpload(token: string, imageBase64: string) {
+export async function FriendSearch(searchQuery: string, token: string){
     const requestOptions = {
-        method: "POST",
+        method: "GET",
         headers: {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-            imageBase64
+            searchQuery
         })
     }
-    const res = await fetch("http://localhost/avatar_upload", requestOptions)
+    const res = await fetch("http://localhost:5174/getFriendBySearch",requestOptions)
     if (!res.ok) {
         throw new Error
     }
     return await res.json()
 }
 
-export async function ChangePassword(token: string, newPassword: string) {
+export async function friendRecommended(token: string) {
     const requestOptions = {
-        method: "POST",
+        method: "GET",
         headers: {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-            newPassword
+
         })
     }
-    const res = await fetch("http://localhost/change_password", requestOptions)
-    if (!res.ok) {
+    const res = await fetch("http://localhost:5174/getFriendByRecommend",requestOptions)
+    if(!res.ok){
         throw new Error
     }
     return await res.json()

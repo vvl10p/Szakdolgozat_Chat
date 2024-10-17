@@ -80,3 +80,17 @@ body {
 .sidebarButton:hover .sidebarSettingsIcon {
     transform: rotate(270deg);
 }
+
+.sidebarUserContainer {
+
+}
+
+.sidebarUserAvatarContainer {
+
+}
+
+.sidebarUserAvatar {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+}
