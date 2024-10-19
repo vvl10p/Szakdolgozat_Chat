@@ -22,9 +22,41 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/avatar_upload", h.handleAvatarUpload).Methods("POST")
+	router.HandleFunc("/user/data", h.handleGetUserData).Methods("GET")
+}
+
+func (h *Handler) handleGetUserData(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	userID, err := auth.DecodeJWT(token)
+	if err != nil {
+		fmt.Println("Failed to decode token:", err)
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+		return
+	}
+
+	u, err := h.store.GetUserById(userID)
+	if err != nil {
+		utils.WriteError(w, http.StatusNotFound, err)
+		return
+	}
+
+	res := types.GetUserDataPayload{
+		Username:   u.Username,
+		AvatarPath: u.AvatarPath,
+	}
+
+	utils.WriteJSON(w, http.StatusOK, res)
 }
 
 func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	userID, err := auth.DecodeJWT(token)
+	if err != nil {
+		fmt.Println("Failed to decode token:", err)
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+		return
+	}
+
 	var payload types.AvatarUploadPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
@@ -37,12 +69,22 @@ func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := h.store.GetUserById(payload.ID)
-	if err != nil {
-		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("user doesn't exist"))
+	if _, err := auth.ValidateJWT(r.Header.Get("Authorization")); err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+	}
+
+	u, errors := h.store.GetUserById(userID)
+	if errors != nil {
+		utils.WriteError(w, http.StatusUnauthorized, errors)
 		return
 	}
-	return
+
+	err = h.store.UploadAvatar(u.ID, payload.AvatarPath)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	utils.WriteJSON(w, http.StatusOK, u.AvatarPath)
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {

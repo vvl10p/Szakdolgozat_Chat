@@ -1,4 +1,4 @@
-export async function AvatarUpload(token: string, imageBase64: string) {
+export async function AvatarUpload(token: string, avatarPath: string) {
     const requestOptions = {
         method: "POST",
         headers: {
@@ -6,10 +6,10 @@ export async function AvatarUpload(token: string, imageBase64: string) {
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-            imageBase64
+            avatarPath
         })
     }
-    const res = await fetch("http://localhost/avatar_upload", requestOptions)
+    const res = await fetch("http://localhost:5174/avatar_upload", requestOptions)
     if (!res.ok) {
         throw new Error
     }
@@ -27,9 +27,25 @@ export async function ChangePassword(token: string, newPassword: string) {
             newPassword
         })
     }
-    const res = await fetch("http://localhost/change_password", requestOptions)
+    const res = await fetch("http://localhost:5174/change_password", requestOptions)
     if (!res.ok) {
         throw new Error
     }
+    return await res.json()
+}
+
+export async function GetUserData(token: string) {
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    }
+    const res = await fetch("http://localhost:5174/user/data", requestOptions)
+    if (!res.ok) {
+        throw new Error
+    }
+
     return await res.json()
 }

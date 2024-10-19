@@ -6,33 +6,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import {useTheme} from "../../context/Context.tsx";
 import GroupsIcon from "@mui/icons-material/Groups";
 import {Box, Modal} from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FriendList from "../friendComponents/FriendList.tsx";
+import {GetUserData as GetUserDataAPI} from "../../API/user.ts";
 
 export default function Sidebar() {
 
     const {theme} = useTheme()
 
     const navigate = useNavigate()
-
-    /*const getFriendsRequestOptions = {
-        method:"GET",
-        headers:{
-            "Content-type":"application/json",
-            "Authorization": `Bearer ${token}`
-        },
-
-    }
-
-    async function getFriends(){
-        const res = await fetch("http://localhost:5174/getFriends",getFriendsRequestOptions)
-        if(res.ok){
-            return res.json()
-        }
-        else{
-            return res.json()
-        }
-    }*/
 
     function mapChats() {
         return (
@@ -45,6 +27,32 @@ export default function Sidebar() {
             </>
         )
     }
+
+    interface userData {
+        username: string
+        avatarPath: string
+    }
+
+    const [userData, setUserData] = useState<userData | null>(null)
+
+    useEffect(() => {
+        async function getUserData() {
+            const token = localStorage.getItem("jwt")
+            if (token) {
+                try {
+                    const data = await GetUserDataAPI(token)
+                    setUserData(data)
+                } catch (error) {
+                    return
+                }
+            }
+        }
+
+        getUserData()
+
+    }, [])
+
+    const avatarSrc = userData?.avatarPath ? userData.avatarPath : placeHolderImage
 
     const style = {
         position: "absolute",
@@ -59,7 +67,7 @@ export default function Sidebar() {
         p: 4,
     }
 
-    const [openFriend,setOpenFriend] = useState<boolean>(false)
+    const [openFriend, setOpenFriend] = useState<boolean>(false)
     const handleOpenFriend = () => setOpenFriend(true)
     const handleCloseFriend = () => setOpenFriend(false)
 
@@ -87,13 +95,14 @@ export default function Sidebar() {
                         <span>ChatApp</span>*/}
                     <div className={"sidebarUserContainer"}>
                         <div className={"sidebarUserAvatarContainer"}>
-                            <img className={"sidebarUserAvatar"} src={placeHolderImage}/>
+                            <img className={"sidebarUserAvatar"} src={avatarSrc}
+                                 alt={`${userData?.username}'s avatar`}/>
                         </div>
                         <div className={"sidebarUsernameContainer"}>
-                            <span className={"sidebarUsername"}></span>
+                            <span className={"sidebarUsername"}>{userData?.username}</span>
                         </div>
                         <div className={"sidebarUserActionContainer"}>
-                            <span className={"sidebarUserAction"} onClick={()=> navigate("/settings")}><SettingsIcon/></span>
+                            <span className={"sidebarUserAction"} onClick={() => navigate("/settings")}><SettingsIcon/></span>
                             <span className={"sidebarUserAction"} onClick={handleOpenFriend}><GroupsIcon/></span>
                             <Modal
                                 open={openFriend}

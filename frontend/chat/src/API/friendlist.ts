@@ -1,4 +1,4 @@
-export async function FriendSearch(searchQuery: string, token: string){
+export async function FriendSearch(searchQuery: string, token: string) {
     const requestOptions = {
         method: "GET",
         headers: {
@@ -9,7 +9,7 @@ export async function FriendSearch(searchQuery: string, token: string){
             searchQuery
         })
     }
-    const res = await fetch("http://localhost:5174/getFriendBySearch",requestOptions)
+    const res = await fetch("http://localhost:5174/getFriendBySearch", requestOptions)
     if (!res.ok) {
         throw new Error
     }
@@ -23,12 +23,10 @@ export async function friendRecommended(token: string) {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-
-        })
+        body: JSON.stringify({})
     }
-    const res = await fetch("http://localhost:5174/getFriendByRecommend",requestOptions)
-    if(!res.ok){
+    const res = await fetch("http://localhost:5174/getFriendByRecommend", requestOptions)
+    if (!res.ok) {
         throw new Error
     }
     return await res.json()

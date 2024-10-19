@@ -3,12 +3,12 @@ import {useRef, useState} from "react";
 import {Box, Modal} from "@mui/material";
 import "./UserSettings.css";
 import {useNavigate} from "react-router-dom";
+import {AvatarUpload as AvatarUploadAPI} from "../API/user.ts";
 
 function UserSettings() {
     const {theme} = useTheme()
     const navigate = useNavigate()
 
-    //const token = localStorage.getItem("jwt")
     const MAX_FILE_SIZE = 5 * 1024 * 1024
 
     const [, setErrorMessage] = useState<string>("")
@@ -36,6 +36,19 @@ function UserSettings() {
         if (inputFileRef.current) {
             inputFileRef.current.click()
         }
+    }
+
+    const token: string | null = localStorage.getItem("jwt")
+
+    async function handleAvatarUploadRequest() {
+        if (token && selectedImage) {
+            try {
+                const res = await AvatarUploadAPI(token, selectedImage)
+                return res.data;
+            } catch (err) {
+                return
+            }
+        } else return
     }
 
     const handleLogOut = () => {
@@ -83,7 +96,8 @@ function UserSettings() {
                                 <img className={"userSettingsAvatarImage"}
                                      src={selectedImage || "https://via.placeholder.com/400"}
                                      alt={"AvatarImagePlaceholder"}
-                                     onClick={handleImageClick}></img>
+                                     onClick={handleImageClick}>
+                                </img>
                             </div>
                             <input
                                 type={"file"}
@@ -95,7 +109,9 @@ function UserSettings() {
                             <div className={"userSettingsAvatarButtonContainer"}>
                                 <button className={"userSettingsAvatarButton"} onClick={handleCloseAvatar}>Close
                                 </button>
-                                <button className={"userSettingsAvatarButton"}>Change avatar</button>
+                                <button className={"userSettingsAvatarButton"}
+                                        onClick={handleAvatarUploadRequest}>Change avatar
+                                </button>
                             </div>
                         </div>
                     </Box>

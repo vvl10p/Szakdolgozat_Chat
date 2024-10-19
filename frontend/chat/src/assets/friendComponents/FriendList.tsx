@@ -9,8 +9,7 @@ import placeHolderAvatar from "../chatComponents/placeholder_avatar.png"
 // addig nem lehet message amig nem fogadta el a barat kerelmet
 
 
-
-const FriendContent = (status:string) => {
+const FriendContent = (status: string) => {
     return (
         <div className={"friendListUserContainer"}>
             <div className={"friendListUserAvatarContainer"}>

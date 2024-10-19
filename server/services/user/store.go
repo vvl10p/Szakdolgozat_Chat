@@ -10,12 +10,29 @@ type Store struct {
 	db *sql.DB
 }
 
+func (store *Store) GetUserData(userId int) (username string, avatarPath string, err error) {
+	rows, err := store.db.Query("SELECT Username, AvatarPath FROM User WHERE userID = ?", userId)
+	if err != nil {
+		return "", "", err
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		return "", "", rows.Err()
+	}
+	u, err := scanRowIntoUser(rows)
+	if err != nil {
+		return "", "", err
+	}
+	return u.Username, u.AvatarPath, nil
+}
+
 func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
 func (store *Store) UploadAvatar(id int, pathString string) error {
-	_, err := store.db.Query("UPDATE User SET AvatarPath ? WHERE UserID=?", pathString, id)
+	_, err := store.db.Exec("UPDATE User SET AvatarPath = ? WHERE UserID = ?", pathString, id)
 	if err != nil {
 		return err
 	}
@@ -27,17 +44,20 @@ func (store *Store) GetUserById(id int) (*types.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	u := new(types.User)
-	for rows.Next() {
-		u, err = scanRowIntoUser(rows)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if u.ID == 0 {
-		return nil, fmt.Errorf("user not found")
+	defer rows.Close()
+
+	if !rows.Next() {
+		return nil, fmt.Errorf("user does not exist")
 	}
 
+	u, err := scanRowIntoUser(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	if u.ID == 0 {
+		return nil, fmt.Errorf("user does not exist")
+	}
 	return u, nil
 }
 
@@ -69,7 +89,9 @@ func (store *Store) GetUserByUsername(username string) (*types.User, error) {
 }
 
 func scanRowIntoUser(rows *sql.Rows) (*types.User, error) {
-	user := new(types.User)
+	user := &types.User{}
+
+	var avatarPath sql.NullString
 
 	err := rows.Scan(
 		&user.ID,
@@ -77,9 +99,17 @@ func scanRowIntoUser(rows *sql.Rows) (*types.User, error) {
 		&user.Email,
 		&user.Password,
 		&user.CreatedAt,
+		&avatarPath,
 	)
 	if err != nil {
 		return nil, err
 	}
+
+	if avatarPath.Valid {
+		user.AvatarPath = avatarPath.String
+	} else {
+		user.AvatarPath = ""
+	}
+
 	return user, nil
 }

@@ -21,7 +21,13 @@ func NewAPIServer(address string, db *sql.DB) *APIServer {
 	}
 }
 func (s *APIServer) Run() error {
-	cors.Default()
+	corsOptions := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	})
+
 	router := mux.NewRouter()
 
 	userStore := user.NewStore(s.db)
@@ -32,7 +38,7 @@ func (s *APIServer) Run() error {
 	messageHandler := message.NewHandler(messageStore)
 	messageHandler.RegisterRoutes(router)
 
-	handler := cors.Default().Handler(router)
+	handler := corsOptions.Handler(router)
 
 	return http.ListenAndServe(s.address, handler)
 }
