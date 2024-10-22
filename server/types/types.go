@@ -9,7 +9,8 @@ type UserStore interface {
 	GetUserById(userId int) (*User, error)
 	CreateUser(User) error
 	UploadAvatar(userId int, avatarString string) error
-	GetUserData(useId int) (username string, avatarPath string, err error)
+	GetUserData(userId int) (username string, avatarPath string, err error)
+	GetUsers(userId int, searchQuery string) ([]UserBasicInfo, error)
 }
 
 type MessageStore interface {
@@ -60,4 +61,10 @@ type AvatarUploadPayload struct {
 type GetUserDataPayload struct {
 	Username   string `json:"username"`
 	AvatarPath string `json:"avatarPath"`
+}
+
+type UserBasicInfo struct {
+    UserID int `json:"id"`
+    Username string `json:"username"`
+    AvatarPath string `json:"avatarPath"`
 }

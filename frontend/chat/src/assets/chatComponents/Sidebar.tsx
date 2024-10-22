@@ -9,6 +9,7 @@ import {Box, Modal} from "@mui/material";
 import {useEffect, useState} from "react";
 import FriendList from "../friendComponents/FriendList.tsx";
 import {GetUserData as GetUserDataAPI} from "../../API/user.ts";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Sidebar() {
 
@@ -65,6 +66,7 @@ export default function Sidebar() {
         boxShadow: 24,
         backgroundColor: "#333",
         p: 4,
+        outline: 0,
     }
 
     const [openFriend, setOpenFriend] = useState<boolean>(false)
@@ -98,20 +100,29 @@ export default function Sidebar() {
                             <img className={"sidebarUserAvatar"} src={avatarSrc}
                                  alt={`${userData?.username}'s avatar`}/>
                         </div>
-                        <div className={"sidebarUsernameContainer"}>
-                            <span className={"sidebarUsername"}>{userData?.username}</span>
-                        </div>
-                        <div className={"sidebarUserActionContainer"}>
-                            <span className={"sidebarUserAction"} onClick={() => navigate("/settings")}><SettingsIcon/></span>
-                            <span className={"sidebarUserAction"} onClick={handleOpenFriend}><GroupsIcon/></span>
-                            <Modal
-                                open={openFriend}
-                                onClose={handleCloseFriend}
-                            >
-                                <Box sx={style}>
-                                    <FriendList/>
-                                </Box>
-                            </Modal>
+                        <div className={"sidebarUserNameActionContainer"}>
+                            <div className={"sidebarUsernameContainer"}>
+                                <span className={"sidebarUsername"}>{userData?.username}</span>
+                            </div>
+                            <div className={"sidebarUserActionContainer"}>
+                                <div className={"sidebarButton"} onClick={() => navigate("/settings")}>
+                                    <span className={"sidebarUserAction sidebarSettingsIcon"}
+                                          ><SettingsIcon/></span>
+                                </div>
+                                <div className={"sidebarButton"} onClick={handleOpenFriend}>
+                                    <span className={"sidebarUserAction"}
+                                          ><GroupsIcon/></span>
+                                </div>
+                                <Modal
+                                    open={openFriend}
+                                    onClose={handleCloseFriend}
+                                >
+                                    <Box sx={style}>
+                                        <span className={"sidebarFriendModalClose"} onClick={handleCloseFriend}><CloseIcon/></span>
+                                        <FriendList/>
+                                    </Box>
+                                </Modal>
+                            </div>
                         </div>
                     </div>
                 </div>

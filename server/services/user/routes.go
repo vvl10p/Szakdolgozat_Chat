@@ -23,6 +23,37 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/avatar_upload", h.handleAvatarUpload).Methods("POST")
 	router.HandleFunc("/user/data", h.handleGetUserData).Methods("GET")
+	router.HandleFunc("/user/get/", h.handleGetUsers).Methods("GET")
+}
+
+func (h *Handler) handleGetUsers(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	userID, err := auth.DecodeJWT(token)
+	if err != nil {
+		fmt.Println("Failed to decode token:", err)
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+		return
+	}
+
+    searchQuery := r.URL.Query().Get("searchQuery")
+    fmt.Println(searchQuery)
+
+    users, err := h.store.GetUsers(searchQuery, userID)
+    if err != nil {
+		utils.WriteError(w, http.StatusNotFound, err)
+		return
+    }
+
+    var res []types.UserBasicInfo
+    for _, user := range users {
+        basicInfo := types.UserBasicInfo{
+            UserID: user.UserID,
+            Username:   user.Username,
+    		AvatarPath: user.AvatarPath,
+        }
+        res = append(res, basicInfo)
+    }
+	utils.WriteJSON(w, http.StatusOK, res)
 }
 
 func (h *Handler) handleGetUserData(w http.ResponseWriter, r *http.Request) {
