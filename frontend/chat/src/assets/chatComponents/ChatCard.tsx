@@ -1,6 +1,6 @@
 import './ChatCard.css'
 import placeHolderImage from "./placeholder_avatar.png"
-import {useTheme} from "../../context/Context.tsx";
+import {useTheme} from "../../context/ThemeContext.tsx";
 
 function ChatCard() {
     const {theme} = useTheme()

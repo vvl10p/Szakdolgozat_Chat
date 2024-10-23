@@ -2,7 +2,7 @@ import './Register.css'
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Register as RegisterAPI} from "./API/auth.ts";
-import {useTheme} from "./context/Context.tsx";
+import {useTheme} from "./context/ThemeContext.tsx";
 
 function Register() {
     const {theme} = useTheme()

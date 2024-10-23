@@ -4,7 +4,7 @@ import {useState} from "react";
 import Display from "./settings/Display.tsx";
 import UserSettings from "./settings/UserSettings.tsx";
 import {useNavigate} from "react-router-dom";
-import {useTheme} from "./context/Context.tsx";
+import {useTheme} from "./context/ThemeContext.tsx";
 
 function Settings() {
     const {theme} = useTheme()

@@ -21,39 +21,42 @@ type BasicUserInfo = {
 function FriendList() {
 
     const [searchQuery, setSearchQuery] = useState<string>("")
-    const [users,setUsers] = useState<BasicUserInfo[]>([])
+    const [users, setUsers] = useState<BasicUserInfo[]>([])
 
-    const handleSearchUsers = useCallback(async ()=> {
-            const token = localStorage.getItem("jwt")
-            if (token) {
-                try {
-                    const data = await FriendSearchAPI(searchQuery, token)
-                    setUsers(data)
-                }
-                catch (error) {
-                    return
-                }
+    const handleSearchUsers = useCallback(async () => {
+        const token = localStorage.getItem("jwt")
+        if (token) {
+            try {
+                const data = await FriendSearchAPI(searchQuery, token)
+                console.log(data)
+                setUsers(data)
+            } catch (error) {
+                return setUsers([])
             }
+        }
     }, [searchQuery])
 
-    useEffect(()=> {
+    useEffect(() => {
         handleSearchUsers()
-    },[])
+    }, [])
 
     return (
         <div className={"friendListContainer"}>
             <div className={"friendListHeader"}>
                 <div className={"friendListSearchContainer"}>
-                    <input className={"friendListSearchInput"} placeholder={"Type here to search..."} onChange={(e)=> {setSearchQuery(e.target.value)}}></input>
+                    <input className={"friendListSearchInput"} placeholder={"Type here to search..."} onChange={(e) => {
+                        setSearchQuery(e.target.value)
+                    }}></input>
                     <button className={"friendListSearchButton"} onClick={handleSearchUsers}><SearchIcon/></button>
                 </div>
             </div>
             <div className={"friendListContentContainer"}>
                 {
-                    users.map((user,index) => (
+                    users.map((user, index) => (
                         <div className={"friendListContent"} key={index}>
                             <div className={"friendListAvatarContainer"}>
-                                <img className={"friendListAvatar"} src={user.avatarPath || placeHolderAvatar} alt={`${user.username}'s avatar`}></img>
+                                <img className={"friendListAvatar"} src={user.avatarPath || placeHolderAvatar}
+                                     alt={`${user.username}'s avatar`}></img>
                             </div>
                             <div className={"friendListUsernameContainer"}>
                                 <span className={"friendListUsername"}>{user.username}</span>

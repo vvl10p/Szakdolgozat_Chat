@@ -1,7 +1,7 @@
 import "./ChatWindow.css"
 import {useEffect, useRef, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {useTheme} from "../../context/Context.tsx";
+import {useTheme} from "../../context/ThemeContext.tsx";
 import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
 import AttachFileIcon from '@mui/icons-material/AttachFile';

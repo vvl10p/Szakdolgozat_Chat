@@ -1,5 +1,5 @@
 import "./Display.css"
-import {useTheme} from "../context/Context.tsx";
+import {useTheme} from "../context/ThemeContext.tsx";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 

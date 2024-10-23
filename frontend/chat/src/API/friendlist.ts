@@ -6,7 +6,7 @@ export async function FriendSearch(searchQuery: string, token: string) {
             "Authorization": `Bearer ${token}`
         },
     }
-    const res = await fetch(`http://localhost:5174/user/get/?searchQuery=${encodeURIComponent(searchQuery)}`, requestOptions)
+    const res = await fetch(`http://localhost:5174/user/get/?${new URLSearchParams({searchQuery: searchQuery})}`, requestOptions)
     if (!res.ok) {
         throw new Error
     }

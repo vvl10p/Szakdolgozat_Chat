@@ -2,10 +2,12 @@ import './Login.css'
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Login as LoginAPI} from "./API/auth.ts";
-import {useTheme} from "./context/Context.tsx";
+import {useTheme} from "./context/ThemeContext.tsx";
+import {useUser} from "./context/UserContext.tsx";
 
 function Login() {
 
+    const {user, setUser} = useUser();
     const {theme} = useTheme()
     const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
@@ -19,10 +21,23 @@ function Login() {
     async function handleLoginRequest() {
         try {
             const res = await LoginAPI(username, password)
-            localStorage.setItem("jwt", (res.token))
-            setVisible(false)
-            navigate("/chat")
-            return res
+            if (res && res.token && res.user) {
+                const loggedInUser = {
+                    ID: res.user.id,
+                    username: res.user.username,
+                    avatarPath: res.user.avatarPath,
+                }
+                setUser(loggedInUser)
+                console.log(user.avatarPath)
+
+                localStorage.setItem("jwt", (res.token))
+                setVisible(false)
+                navigate("/chat")
+                return res
+            } else {
+                throw new Error("Invalid response from server")
+            }
+
         } catch (err) {
             setVisible(true)
         }

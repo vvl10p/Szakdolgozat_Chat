@@ -6,51 +6,48 @@ import (
 	"main/types"
 )
 
-
 type Store struct {
 	db *sql.DB
 }
 
 func (store *Store) GetUsers(userId int, searchQuery string) ([]types.UserBasicInfo, error) {
-    var rows *sql.Rows
-    var err error
+	var rows *sql.Rows
+	var err error
 
-    if searchQuery != "" {
-        rows, err = store.db.Query("SELECT UserID, Username, AvatarPath FROM User WHERE UserID != ? AND Username LIKE ?",userId,"%"+searchQuery+"%")
-    }
-    else {
-        rows, err = store.db.Query("SELECT USERID, Username, AvatarPath FROM User WHERE UserID != ?",userId)
-    }
-    defer rows.Close()
+	if searchQuery != "" {
+		rows, err = store.db.Query("SELECT UserID, Username, AvatarPath FROM User WHERE UserID != ? AND Username LIKE ?", userId, "%"+searchQuery+"%")
+	} else {
+		rows, err = store.db.Query("SELECT USERID, Username, AvatarPath FROM User WHERE UserID != ?", userId)
+	}
+	defer rows.Close()
 
-    var users []types.UserBasicInfo
+	var users []types.UserBasicInfo
 
-    for rows.Next() {
-        var u types.UserBasicInfo
-        var avatarPath sql.NullString
-        err := rows.Scan(
-                &u.UserID,
-                &u.Username,
-                &avatarPath,
-            )
-        if err != nil {
-            return nil, err
-        }
-        if avatarPath.Valid {
-        		u.AvatarPath = avatarPath.String
-        	} else {
-        		u.AvatarPath = ""
-        	}
-        users = append(users, u)
-    }
+	for rows.Next() {
+		var u types.UserBasicInfo
+		var avatarPath sql.NullString
+		err := rows.Scan(
+			&u.UserID,
+			&u.Username,
+			&avatarPath,
+		)
+		if err != nil {
+			return nil, err
+		}
+		if avatarPath.Valid {
+			u.AvatarPath = avatarPath.String
+		} else {
+			u.AvatarPath = ""
+		}
+		users = append(users, u)
+	}
 
-    if err = rows.Err(); err != nil {
-        return nil, err
-    }
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
 
-    return users, nil
+	return users, nil
 }
-
 
 func (store *Store) GetUserData(userId int) (username string, avatarPath string, err error) {
 	rows, err := store.db.Query("SELECT Username, AvatarPath FROM User WHERE userID = ?", userId)

@@ -1,4 +1,4 @@
-import {useTheme} from "../context/Context.tsx";
+import {useTheme} from "../context/ThemeContext.tsx";
 import {useRef, useState} from "react";
 import {Box, Modal} from "@mui/material";
 import "./UserSettings.css";
@@ -11,7 +11,7 @@ function UserSettings() {
 
     const MAX_FILE_SIZE = 5 * 1024 * 1024
 
-    const [, setErrorMessage] = useState<string>("")
+    const [errorMessage, setErrorMessage] = useState<string>("")
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
     const inputFileRef = useRef<HTMLInputElement | null>(null)
@@ -26,6 +26,7 @@ function UserSettings() {
                 const reader = new FileReader()
                 reader.onloadend = () => {
                     setSelectedImage(reader.result as string)
+                    setErrorMessage("")
                 }
                 reader.readAsDataURL(file)
             }
@@ -113,6 +114,7 @@ function UserSettings() {
                                         onClick={handleAvatarUploadRequest}>Change avatar
                                 </button>
                             </div>
+                            <span>{errorMessage}</span>
                         </div>
                     </Box>
                 </Modal>

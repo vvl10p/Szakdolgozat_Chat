@@ -38,13 +38,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    width: 100%;
 }
 
 .chatWindowControlInputField {
-    width: 40rem;
-    max-width: 40rem;
+    width: 60%;
+    min-width: 40vw;
+    justify-self: center;
     padding: 12px 15px;
     font-size: 16px;
     border-radius: 4px;
@@ -53,7 +52,6 @@
     resize: none;
     outline: none;
     border: none;
-    display: flex;
     align-items: center;
     height: 3rem;
     overflow: hidden;
@@ -157,4 +155,9 @@
 
 .chatWindowControlInputPreviewContainer {
     display: flex;
+}
+
+.chatWindowControlInput {
+    width: 100%;
+    display: grid;
 }

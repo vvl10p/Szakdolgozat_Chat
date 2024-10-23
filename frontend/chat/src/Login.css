@@ -105,7 +105,7 @@
 }
 
 .loginForm button {
-    width: 70.5vh;
+    width: 26vw;
     margin-top: 1vh;
     background-color: #8d3b6a;
     border-radius: 10px;
@@ -121,7 +121,7 @@
 }
 
 .loginFormDark button {
-    width: 70.5vh;
+    width: 26vw;
     margin-top: 1vh;
     background-color: #8d3b6a;
     border-radius: 10px;

@@ -1,6 +1,6 @@
 import './App.css'
 import {useNavigate} from "react-router-dom";
-import {useTheme} from "./context/Context.tsx";
+import {useTheme} from "./context/ThemeContext.tsx";
 
 function App() {
     const navigate = useNavigate();

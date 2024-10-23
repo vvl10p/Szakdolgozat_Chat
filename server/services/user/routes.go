@@ -35,24 +35,29 @@ func (h *Handler) handleGetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    searchQuery := r.URL.Query().Get("searchQuery")
-    fmt.Println(searchQuery)
+	searchQuery := r.URL.Query().Get("searchQuery")
 
-    users, err := h.store.GetUsers(searchQuery, userID)
-    if err != nil {
+	users, err := h.store.GetUsers(userID, searchQuery)
+	if err != nil {
 		utils.WriteError(w, http.StatusNotFound, err)
 		return
-    }
+	}
 
-    var res []types.UserBasicInfo
-    for _, user := range users {
-        basicInfo := types.UserBasicInfo{
-            UserID: user.UserID,
-            Username:   user.Username,
-    		AvatarPath: user.AvatarPath,
-        }
-        res = append(res, basicInfo)
-    }
+	var res []types.UserBasicInfo
+	for _, user := range users {
+		basicInfo := types.UserBasicInfo{
+			UserID:     user.UserID,
+			Username:   user.Username,
+			AvatarPath: user.AvatarPath,
+		}
+		res = append(res, basicInfo)
+	}
+
+	if len(res) == 0 {
+		utils.WriteError(w, http.StatusNotFound, fmt.Errorf("user not found"))
+		return
+	}
+
 	utils.WriteJSON(w, http.StatusOK, res)
 }
 
@@ -82,6 +87,11 @@ func (h *Handler) handleGetUserData(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	userID, err := auth.DecodeJWT(token)
+
+	if _, err := auth.ValidateJWT(r.Header.Get("Authorization")); err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+	}
+
 	if err != nil {
 		fmt.Println("Failed to decode token:", err)
 		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
@@ -98,10 +108,6 @@ func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
 		errors := err.(validator.ValidationErrors)
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
 		return
-	}
-
-	if _, err := auth.ValidateJWT(r.Header.Get("Authorization")); err != nil {
-		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
 	}
 
 	u, errors := h.store.GetUserById(userID)
@@ -147,7 +153,14 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
-	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
+	utils.WriteJSON(w, http.StatusOK, map[string]interface{}{
+		"token": token,
+		"user": map[string]interface{}{
+			"id":         u.ID,
+			"username":   u.Username,
+			"avatarPath": u.AvatarPath,
+		},
+	})
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
