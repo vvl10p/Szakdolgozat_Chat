@@ -7,7 +7,7 @@ import {useUser} from "./context/UserContext.tsx";
 
 function Login() {
 
-    const {user, setUser} = useUser();
+    const {setUser} = useUser();
     const {theme} = useTheme()
     const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
@@ -22,14 +22,11 @@ function Login() {
         try {
             const res = await LoginAPI(username, password)
             if (res && res.token && res.user) {
-                const loggedInUser = {
+                setUser({
                     ID: res.user.id,
                     username: res.user.username,
                     avatarPath: res.user.avatarPath,
-                }
-                setUser(loggedInUser)
-                console.log(user.avatarPath)
-
+                })
                 localStorage.setItem("jwt", (res.token))
                 setVisible(false)
                 navigate("/chat")
