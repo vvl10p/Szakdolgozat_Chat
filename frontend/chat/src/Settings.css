@@ -5,7 +5,9 @@
 }
 
 .settingsContainerDark {
-
+    width: 100%;
+    height: 100vh;
+    display: flex;
 }
 
 .settingsSidebarContainer {
@@ -15,7 +17,9 @@
 }
 
 .settingsSidebarContainerDark {
-
+    width: 20%;
+    height: 100vh;
+    background-color: #555555;
 }
 
 .settingsSidebarHeader {
@@ -27,7 +31,11 @@
 }
 
 .settingsSidebarHeaderDark {
-
+    height: 10vh;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .settingsSidebarContent {
@@ -39,7 +47,11 @@
 }
 
 .settingsSidebarContentDark {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 5vh;
 }
 
 .settingsSidebarContent:hover {
@@ -47,7 +59,7 @@
 }
 
 .settingsSidebarContentDark:hover {
-
+    background-color: #333333;
 }
 
 .settingsMainContainer {
@@ -57,7 +69,9 @@
 }
 
 .settingsMainContainerDark {
-
+    width: 80%;
+    height: 100vh;
+    background-color: #444444;
 }
 
 .settingsMainHeader {
@@ -69,13 +83,19 @@
 }
 
 .settingsMainHeaderDark {
-
+    height: 10vh;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .settingsMainContent {
-
+    height: 90vh;
+    background-color: #444444;
 }
 
 .settingsMainContentDark {
-
+    height: 90vh;
+    background-color: #444444;
 }

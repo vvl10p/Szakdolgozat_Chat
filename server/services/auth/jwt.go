@@ -42,7 +42,6 @@ func ValidateJWT(jwtString string) (jwt.Claims, error) {
 		return nil, err
 	}
 
-	fmt.Println(token.Claims)
 	return token.Claims, nil
 }
 

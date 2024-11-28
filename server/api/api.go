@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"main/services/friend"
 	"main/services/message"
 	"main/services/user"
 	"net/http"
@@ -33,6 +34,10 @@ func (s *APIServer) Run() error {
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(router)
+
+	friendStore := friend.NewStore(s.db)
+	friendHandler := friend.NewHandler(friendStore)
+	friendHandler.RegisterRoutes(router)
 
 	messageStore := message.NewStore(s.db)
 	messageHandler := message.NewHandler(messageStore)

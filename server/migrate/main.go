@@ -25,7 +25,7 @@ func main() {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://C:/Users/marus/Desktop/chatapp/server/migrate/migrations",
+		"file://migrate/migrations",
 		"sqlite3",
 		driver,
 	)

@@ -1,8 +1,8 @@
 import "./Settings.css"
-import "./settings/Display.tsx"
+import "./assets/settingsComponents/Display.tsx"
 import {useState} from "react";
-import Display from "./settings/Display.tsx";
-import UserSettings from "./settings/UserSettings.tsx";
+import Display from "./assets/settingsComponents/Display.tsx";
+import UserSettings from "./assets/settingsComponents/UserSettings.tsx";
 import {useNavigate} from "react-router-dom";
 import {useTheme} from "./context/ThemeContext.tsx";
 

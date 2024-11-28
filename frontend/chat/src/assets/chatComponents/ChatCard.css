@@ -1,15 +1,15 @@
-.chatCardHeader {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
 .chatCardContainer {
     height: 10vh;
     display: inline-grid;
     flex-wrap: wrap;
     width: 100%;
+}
+
+.chatCardHeader {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .chatCardAvatar {
@@ -27,5 +27,42 @@
 }
 
 .chatCardTimeContainer {
+    font-size: 0.4em;
+}
+
+.chatCardContainerDark {
+    height: 10vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.chatCardHeaderDark {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.chatCardAvatarDark {
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 50%;
+}
+
+.chatCardUsernameContainerDark {
+    font-size: 0.8em;
+}
+
+.chatCardMessageContainerDark {
+    font-size: 0.5em;
+    display: flex;
+    justify-content: center;
+}
+
+.chatCardTimeContainerDark {
     font-size: 0.4em;
 }

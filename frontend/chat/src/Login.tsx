@@ -23,11 +23,12 @@ function Login() {
             const res = await LoginAPI(username, password)
             if (res && res.token && res.user) {
                 setUser({
-                    ID: res.user.id,
+                    id: res.user.id,
                     username: res.user.username,
                     avatarPath: res.user.avatarPath,
                 })
                 localStorage.setItem("jwt", (res.token))
+                localStorage.setItem("USER", JSON.stringify(res.user))
                 setVisible(false)
                 navigate("/chat")
                 return res
@@ -51,19 +52,20 @@ function Login() {
                     <label>Username</label>
                     <input form={theme === "dark" ? "loginFormDak" : "loginForm"}
                            className={theme === "dark" ? "loginInputDark" : "loginInput"} type={"text"}
-                           name={"username"}
+                           name={"username"} tabIndex={0}
                            onChange={event => setUsername(event.target.value)} placeholder={"Username"} required/>
                     <label>Password</label>
                     <input form={"loginForm"} className={theme === "dark" ? "loginInputDark" : "loginInput"}
-                           type={"password"}
+                           type={"password"} tabIndex={0}
                            onChange={event => setPassword(event.target.value)} placeholder={"Password"} required/>
-                    <button type={"button"} onClick={() => handleLoginRequest()}>Log in</button>
+                    <button type={"button"} tabIndex={0} onClick={() => handleLoginRequest()}>Log in</button>
                     <div className={"errorMessageContainer"} hidden={!visible}>
                         <p className={"errorMessage"}>Invalid username or password</p>
                     </div>
                     <div className={theme === "dark" ? "loginFooterDark" : "loginFooter"}>
                         <p className={theme === "dark" ? "loginFooterTextDark" : "loginFooterText"}>
-                            Don't have an account? <span onClick={() => navigate('/register')}>Create one</span>
+                            Don't have an account? <span tabIndex={0}
+                                                         onClick={() => navigate('/register')}>Create one</span>
                         </p>
                     </div>
                 </form>

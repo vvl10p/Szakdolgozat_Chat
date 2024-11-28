@@ -1,9 +1,10 @@
-import {useTheme} from "../context/ThemeContext.tsx";
+import {useTheme} from "../../context/ThemeContext.tsx";
 import {useRef, useState} from "react";
 import {Box, Modal} from "@mui/material";
 import "./UserSettings.css";
 import {useNavigate} from "react-router-dom";
-import {AvatarUpload as AvatarUploadAPI} from "../API/user.ts";
+import {AvatarUpload as AvatarUploadAPI} from "../../API/user.ts";
+import avatarPlaceholder from "./avatarPlaceholder.png";
 
 function UserSettings() {
     const {theme} = useTheme()
@@ -54,6 +55,7 @@ function UserSettings() {
 
     const handleLogOut = () => {
         localStorage.removeItem("jwt")
+        localStorage.removeItem("USER")
         navigate("/")
     }
 
@@ -95,7 +97,7 @@ function UserSettings() {
                         <div className={"userSettingsAvatarContainer"}>
                             <div className={"userSettingsAvatarImageContainer"}>
                                 <img className={"userSettingsAvatarImage"}
-                                     src={selectedImage || "https://via.placeholder.com/400"}
+                                     src={selectedImage || avatarPlaceholder}
                                      alt={"AvatarImagePlaceholder"}
                                      onClick={handleImageClick}>
                                 </img>
@@ -138,6 +140,9 @@ function UserSettings() {
                         </div>
                     </Box>
                 </Modal>
+                <div className={"userSettingsButtonContainer"}>
+                    <button>Manage Blocked Users</button>
+                </div>
                 <div className={"userSettingsButtonContainer"}>
                     <button onClick={handleLogOut}>Log out</button>
                 </div>

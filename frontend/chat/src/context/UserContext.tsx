@@ -1,13 +1,13 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 
 type User = {
-    ID: number | null,
+    id: number | null,
     username: string | null,
     avatarPath: string | null,
 }
 
 const defaultUser: User = {
-    ID: null,
+    id: null,
     username: null,
     avatarPath: null,
 }
@@ -36,23 +36,14 @@ export const UserProvider = ({children}: UserProviderProps) => {
 
     useEffect(() => {
         const storedUser = localStorage.getItem("USER")
-
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
     }, [])
 
-    useEffect(() => {
-        if (user) {
-            localStorage.setItem("USER", JSON.stringify(user))
-        } else {
-            localStorage.removeItem("USER")
-        }
-    }, [user])
-
-        return (
-            <UserContext.Provider value={{user, setUser}}>
-                {children}
-            </UserContext.Provider>
-        )
+    return (
+        <UserContext.Provider value={{user, setUser}}>
+            {children}
+        </UserContext.Provider>
+    )
 }

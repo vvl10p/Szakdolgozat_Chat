@@ -5,12 +5,6 @@
     color: #fff;
 }
 
-.registerWrapperDark {
-    width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(to bottom right, #d17c7d, #af5972, #8d3b6a, #6b2460);
-    color: #fff;
-}
 
 .registerContainer {
     display: flex;
@@ -23,16 +17,6 @@
     min-width: fit-content;
 }
 
-.registerContainerDark {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-    min-height: fit-content;
-    min-width: fit-content;
-}
 
 .registerForm {
     background-color: rgba(140, 140, 140, 0.2);
@@ -49,20 +33,6 @@
     min-width: fit-content;
 }
 
-.registerFormDark {
-    background-color: rgba(140, 140, 140, 0.2);
-    backdrop-filter: blur(8px);
-    height: 70vh;
-    width: 60%;
-    border: 1px solid #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    min-height: fit-content;
-    min-width: fit-content;
-}
 
 .registerForm label {
     display: block;
@@ -72,13 +42,6 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerFormDark label {
-    display: block;
-    color: white;
-    font-size: 1.2em;
-    width: 70vh;
-    font-family: "JetBrains Mono", monospace;
-}
 
 .registerForm input {
     width: 68vh;
@@ -93,18 +56,6 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerFormDark input {
-    width: 68vh;
-    height: 4vh;
-    margin: 1vh 0;
-    background-color: #8d3b6a;
-    border-radius: 10px;
-    border: 2px solid #6b2460;
-    color: white;
-    font-size: 1em;
-    padding: 1vh;
-    font-family: "JetBrains Mono", monospace;
-}
 
 .registerForm input:focus {
     background-color: #6b2460;
@@ -114,23 +65,12 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.registerFormDark input:focus {
-    background-color: #6b2460;
-    border: 2px solid #421249;
-    text-align: left;
-    outline: none;
-    font-family: "JetBrains Mono", monospace;
-}
 
 .registerForm input:hover {
     background-color: #6b2460;
     border: 2px solid #421249;
 }
 
-.registerFormDark input:hover {
-    background-color: #6b2460;
-    border: 2px solid #421249;
-}
 
 .registerForm button {
     width: 70.5vh;
@@ -148,12 +88,109 @@
     min-width: fit-content;
 }
 
-.registerFormDark button {
-    width: 70.5vh;
-    margin-top: 1vh;
-    background-color: #8d3b6a;
+
+.registerForm button:hover {
+    background-color: #6b2460;
+    border: 2px solid #421249;
+    text-decoration: white;
+    cursor: pointer;
+}
+
+
+.errorMessage {
+    color: #ce1010;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.registerFooter {
+    font-family: "JetBrains Mono", monospace;
+    color: #fff;
+}
+
+
+.registerFooter span, .registerFooter span:visited, .registerFooter span:active {
+    color: #390096;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.registerWrapperDark {
+    width: 100%;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+.registerContainerDark {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    min-height: fit-content;
+    min-width: fit-content;
+}
+
+.registerFormDark {
+    background-color: #262626;
+    backdrop-filter: blur(8px);
+    height: 70vh;
+    width: 60%;
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border-radius: 10px;
-    border: 2px solid #6b2460;
+    min-height: fit-content;
+    min-width: fit-content;
+}
+
+.registerFormDark label {
+    display: block;
+    color: #ffff0a;
+    font-size: 1.2em;
+    width: 36vw;
+    font-family: "JetBrains Mono", monospace;
+}
+
+.registerFormDark input {
+    width: 35vw;
+    height: 4vh;
+    margin: 1vh 0;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+    color: white;
+    font-size: 1em;
+    padding: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+}
+
+.registerFormDark input:focus {
+    background-color: #0f0f0f;
+    border: 2px solid #ffffff;
+    text-align: left;
+    outline: none;
+    font-family: "JetBrains Mono", monospace;
+}
+
+.registerFormDark input:hover {
+    background-color: #0f0f0f;
+    border: 2px solid #ffffff;
+}
+
+.registerFormDark button {
+    width: 36vw;
+    padding: 1rem;
+    margin-top: 3vh;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    border: 2px solid #ffffff;
     height: 6vh;
     font-family: "JetBrains Mono", monospace;
     color: #fff;
@@ -164,28 +201,11 @@
     min-width: fit-content;
 }
 
-.registerForm button:hover {
-    background-color: #6b2460;
-    border: 2px solid #421249;
-    text-decoration: white;
-    cursor: pointer;
-}
-
 .registerFormDark button:hover {
-    background-color: #6b2460;
-    border: 2px solid #421249;
+    background-color: #0f0f0f;
+    border: 2px solid #ffffff;
     text-decoration: white;
     cursor: pointer;
-}
-
-.errorMessage {
-    color: #ce1010;
-    font-family: "JetBrains Mono", monospace;
-}
-
-.registerFooter {
-    font-family: "JetBrains Mono", monospace;
-    color: #fff;
 }
 
 .registerFooterDark {
@@ -194,14 +214,7 @@
 }
 
 .registerFooterDark span, .registerFooterDark span:visited, .registerFooterDark span:active {
-    color: #390096;
-    text-decoration: none;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.registerFooter span, .registerFooter span:visited, .registerFooter span:active {
-    color: #390096;
+    color: #ffff0a;
     text-decoration: none;
     font-weight: bold;
     cursor: pointer;

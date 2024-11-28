@@ -1,0 +1,27 @@
+.displayContainer {
+    height: 100%;
+    background-color: #262626;
+}
+
+.displayButtonContainer {
+    background-color: #262626;
+}
+
+.displayButton {
+    color: #000000;
+}
+
+.displayContainerDark {
+    height: 100%;
+    background-color: #262626;
+}
+
+.displayButtonContainerDark {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.displayButtonDark {
+    color: #ffffff;
+    background-color: #1a1a1a;
+}

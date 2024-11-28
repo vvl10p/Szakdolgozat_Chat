@@ -20,14 +20,14 @@ func NewServer() *Server {
 	}
 }*/
 
-type Server struct{
-    conns map[*websocket.Conn]bool
+type Server struct {
+	conns map[*websocket.Conn]bool
 }
 
-func NewServer() *Server{
-    return &Server{
-        conns: make(map[*websocket.Conn]bool),
-    }
+func NewServer() *Server {
+	return &Server{
+		conns: make(map[*websocket.Conn]bool),
+	}
 }
 
 func (s *Server) handleConn(conn *websocket.Conn) {

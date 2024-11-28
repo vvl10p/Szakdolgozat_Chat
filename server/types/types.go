@@ -18,6 +18,12 @@ type MessageStore interface {
 	StoreMessage(Message) error
 }
 
+type FriendStore interface {
+	GetUsersWithStatus(userId int, searchQuery string) ([]UserFriendStatus, error)
+	UpdateFriendStatus(userId int, friendId int, status string) error
+	GetFriendsForSidebar(userId int) ([]UserFriendStatus, error)
+}
+
 type Message struct {
 	ID             int       `json:"id"`
 	SenderId       int       `json:"sender_id"`
@@ -64,7 +70,26 @@ type GetUserDataPayload struct {
 }
 
 type UserBasicInfo struct {
-    UserID int `json:"id"`
-    Username string `json:"username"`
-    AvatarPath string `json:"avatarPath"`
+	UserID     int    `json:"id"`
+	Username   string `json:"username"`
+	AvatarPath string `json:"avatarPath"`
+}
+
+type UserFriendStatus struct {
+	UserID     int    `json:"id"`
+	Username   string `json:"username"`
+	AvatarPath string `json:"avatarPath"`
+	Status     string `json:"status"`
+	FriendId   string `json:"friendId"`
+}
+
+type FriendPayload struct {
+	FriendId int    `json:"friendId"`
+	Status   string `json:"status"`
+}
+
+type Friend struct {
+	UserId   int    `json:"id"`
+	FriendId int    `json:"friendId"`
+	Status   string `json:"status"`
 }

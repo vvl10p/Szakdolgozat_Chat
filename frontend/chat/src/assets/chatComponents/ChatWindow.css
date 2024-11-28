@@ -161,3 +161,167 @@
     width: 100%;
     display: grid;
 }
+
+.chatWindowContainerDark {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.chatWindowContentDark {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatWindowHeaderContainerDark {
+    position: relative;
+    height: 10vh;
+    width: 100%;
+    background-color: #444;
+}
+
+.chatWindowMessageHistoryContainerDark {
+    width: 100%;
+    height: 80vh;
+    background-color: #555;
+}
+
+.chatWindowControlContainerDark {
+    width: 100%;
+    height: 10vh;
+    background-color: #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chatWindowControlInputContainerDark {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatWindowControlInputFieldDark {
+    width: 60%;
+    min-width: 40vw;
+    justify-self: center;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #555555;
+    resize: none;
+    outline: none;
+    border: none;
+    align-items: center;
+    height: 3rem;
+    overflow: hidden;
+    line-height: 1.5;
+    color: white;
+    transform-origin: bottom;
+}
+
+.chatWindowControlInputFieldDark:hover {
+    background-color: #666666;
+}
+
+.chatWindowControlInputFieldDark:focus-visible {
+    background-color: #666666;
+    outline: #390096 2px solid;
+}
+
+.chatWindowControlButtonDark {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: none;
+    background-color: #555555;
+    color: white;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    margin: 0 0.5rem 0 0.5rem;
+}
+
+.chatWindowControlButtonDark:hover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: none;
+    background-color: #666666;
+    color: white;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    margin: 0 0.5rem 0 0.5rem;
+    cursor: pointer;
+}
+
+.chatWindowControlInputPreviewImageDark {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+
+
+.chatWindowControlInputImageContainerDark {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background: #444444;
+    border: 2px solid #333333;
+    margin-top: -9.65rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.chatWindowControlInputPreviewImageRemoveDark {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background: none;
+}
+
+.chatWindowControlInputPreviewFileDark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 12px;
+}
+
+
+.chatWindowControlInputFileContainerDark {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background: #444444;
+    border: 2px solid #333333;
+    margin-top: -9.65rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.chatWindowControlInputPreviewContainerDark {
+    display: flex;
+}
+
+.chatWindowControlInputDark {
+    width: 100%;
+    display: grid;
+}

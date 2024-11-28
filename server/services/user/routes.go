@@ -23,7 +23,6 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/avatar_upload", h.handleAvatarUpload).Methods("POST")
 	router.HandleFunc("/user/data", h.handleGetUserData).Methods("GET")
-	router.HandleFunc("/user/get/", h.handleGetUsers).Methods("GET")
 }
 
 func (h *Handler) handleGetUsers(w http.ResponseWriter, r *http.Request) {

@@ -1,6 +1,6 @@
 import "./ChatWindow.css"
 import {useEffect, useRef, useState} from "react";
-import {useSearchParams} from "react-router-dom";
+//import {useSearchParams} from "react-router-dom";
 import {useTheme} from "../../context/ThemeContext.tsx";
 import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
@@ -19,8 +19,7 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 function ChatWindow() {
     const {theme} = useTheme()
 
-    const searchParams = useSearchParams();
-    console.log(searchParams);
+    //const searchParams = useSearchParams()
     const [inputText, setInputText] = useState<string>('')
     const [, setLineCount] = useState<number>(1)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -37,7 +36,6 @@ function ChatWindow() {
                 textareaRef.current.style.overflowY = "hidden"
             }
             const currentLineCount = Math.floor(textareaRef.current.scrollHeight / 30)
-            console.log(currentLineCount)
             setLineCount(currentLineCount)
             const offset = Math.min((currentLineCount - 1) * 12, 3 * 8)
             textareaRef.current.style.transform = `translateY(-${offset}px)`
@@ -180,25 +178,31 @@ function ChatWindow() {
                                        style={{display: 'none'}}/>
                             </div>
                             <div className={theme === "dark" ? "chatWindowControlInputDark" : "chatWindowControlInput"}>
-                                <div className={"chatWindowControlInputPreviewContainer"}>
+                                <div
+                                    className={theme === "dark" ? "chatWindowControlInputPreviewContainerDark" : "chatWindowControlInputPreviewContainer"}>
                                     {image && (
-                                        <div className={"chatWindowControlInputImageContainer"}>
+                                        <div
+                                            className={theme === "dark" ? "chatWindowControlInputImageContainerDark" : "chatWindowControlInputImageContainer"}>
                                             <img src={image} alt={"ChatImagePreview"}
-                                                 className={"chatWindowControlInputPreviewImage"}/>
-                                            <button className={"chatWindowControlInputPreviewImageRemove"}
-                                                    onClick={handleImageRemove}>
+                                                 className={theme === "dark" ? "chatWindowControlInputPreviewImageDark" : "chatWindowControlInputPreviewImage"}/>
+                                            <button
+                                                className={theme === "dark" ? "chatWindowControlInputPreviewImageRemoveDark" : "chatWindowControlInputPreviewImageRemove"}
+                                                onClick={handleImageRemove}>
                                                 <CancelIcon/>
                                             </button>
                                         </div>
                                     )}
                                     {file && (
-                                        <div className={"chatWindowControlInputFileContainer"}>
-                                            <div className={"chatWindowControlInputPreviewFile"}>
+                                        <div
+                                            className={theme === "dark" ? "chatWindowControlInputFileContainerDark" : "chatWindowControlInputFileContainer"}>
+                                            <div
+                                                className={theme === "dark" ? "chatWindowControlInputPreviewFileDark" : "chatWindowControlInputPreviewFile"}>
                                                 {filePreview}
                                                 <p>{fileName}</p>
                                             </div>
-                                            <button className={"chatWindowControlInputPreviewImageRemove"}
-                                                    onClick={handleFileRemove}>
+                                            <button
+                                                className={theme === "dark" ? "chatWindowControlInputPreviewImageRemoveDark" : "chatWindowControlInputPreviewImageRemove"}
+                                                onClick={handleFileRemove}>
                                                 <CancelIcon/>
                                             </button>
                                         </div>
