@@ -5,7 +5,6 @@ import (
 	"log"
 	"main/api"
 	db2 "main/db"
-	"main/services/chat"
 )
 
 func main() {
@@ -29,8 +28,4 @@ func initStorage(db *sql.DB) {
 	}
 
 	log.Println("Successfully connected to database")
-}
-
-func initWebsocket() {
-	chat.NewServer()
 }

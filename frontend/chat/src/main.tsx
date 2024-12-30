@@ -10,6 +10,7 @@ import Settings from "./Settings.tsx";
 import Display from "./assets/settingsComponents/Display.tsx";
 import {ThemeProvider} from "./context/ThemeContext.tsx";
 import {UserProvider} from "./context/UserContext.tsx";
+import {ChatProvider} from "./context/ChatContext.tsx";
 
 interface PrivateRouteProps {
     children: React.ReactNode
@@ -36,58 +37,60 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({children}) => {
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
         <UserProvider>
-            <ThemeProvider>
-                <Routes>
-                    <Route
-                        path={"/"}
-                        element={
-                            //<PrivateRouteToken>
-                            <App/>
-                            //</PrivateRouteToken>
-                        }
-                    />
-                    <Route
-                        path={"/login"}
-                        element={
-                            //<PrivateRouteToken>
-                            <Login/>
-                            //</PrivateRouteToken>
-                        }
-                    />
-                    <Route
-                        path={"/register"}
-                        element={
-                            //<PrivateRouteToken>
-                            <Register/>
-                            //</PrivateRouteToken>
-                        }
-                    />
-                    <Route
-                        path={"/chat"}
-                        element={
-                            <PrivateRoute>
-                                <Chat/>
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route
-                        path={"/settings"}
-                        element={
-                            <PrivateRoute>
-                                <Settings/>
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route
-                        path={"/display"}
-                        element={
-                            <PrivateRoute>
-                                <Display/>
-                            </PrivateRoute>
-                        }
-                    />
-                </Routes>
-            </ThemeProvider>
+            <ChatProvider>
+                <ThemeProvider>
+                    <Routes>
+                        <Route
+                            path={"/"}
+                            element={
+                                //<PrivateRouteToken>
+                                <App/>
+                                //</PrivateRouteToken>
+                            }
+                        />
+                        <Route
+                            path={"/login"}
+                            element={
+                                //<PrivateRouteToken>
+                                <Login/>
+                                //</PrivateRouteToken>
+                            }
+                        />
+                        <Route
+                            path={"/register"}
+                            element={
+                                //<PrivateRouteToken>
+                                <Register/>
+                                //</PrivateRouteToken>
+                            }
+                        />
+                        <Route
+                            path={"/chat"}
+                            element={
+                                <PrivateRoute>
+                                    <Chat/>
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path={"/settings"}
+                            element={
+                                <PrivateRoute>
+                                    <Settings/>
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path={"/display"}
+                            element={
+                                <PrivateRoute>
+                                    <Display/>
+                                </PrivateRoute>
+                            }
+                        />
+                    </Routes>
+                </ThemeProvider>
+            </ChatProvider>
         </UserProvider>
     </BrowserRouter>
 )

@@ -2,7 +2,6 @@ package friend
 
 import (
 	"database/sql"
-	"fmt"
 	"main/types"
 )
 
@@ -146,7 +145,6 @@ func (store *Store) UpdateFriendStatus(userId int, friendId int, status string) 
 		}
 		*friends = append(*friends, u)
 	}
-	fmt.Println(len(*friends))
 
 	if err = rows.Err(); err != nil {
 		return err

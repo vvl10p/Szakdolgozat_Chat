@@ -1,18 +1,14 @@
-let ws: WebSocket
-
-export function InitConnect() {
-    ws = new WebSocket("ws://localhost:5174/ws")
-    ws.onmessage = () => {
-
+/*async function getSessions(token: string) {
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
     }
-}
-
-type MessageType = {
-    message: string,
-    senderID: number,
-    conversationID: number,
-}
-
-export function sendMessage(msg: MessageType) {
-    ws.send(JSON.stringify(msg))
-}
+    const res = await fetch("http://localhost:5174/getFriendByRecommend", requestOptions)
+    if (!res.ok) {
+        throw new Error
+    }
+    return await res.json()
+}*/
