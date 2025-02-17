@@ -1,8 +1,8 @@
 .registerWrapper {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(to bottom right, #d17c7d, #af5972, #8d3b6a, #6b2460);
-    color: #fff;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 
@@ -19,11 +19,10 @@
 
 
 .registerForm {
-    background-color: rgba(140, 140, 140, 0.2);
-    backdrop-filter: blur(8px);
+    background-color: #ffffff;
+    border: 2px solid #000000;
     height: 70vh;
     width: 60%;
-    border: 1px solid #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,64 +35,59 @@
 
 .registerForm label {
     display: block;
-    color: white;
     font-size: 1.2em;
-    width: 70vh;
+    width: 35vw;
     font-family: "JetBrains Mono", monospace;
 }
 
 
 .registerForm input {
-    width: 68vh;
-    height: 4vh;
+    color: #000000;
+    width: 34vw;
+    height: 6vh;
     margin: 1vh 0;
-    background-color: #8d3b6a;
+    background-color: #ffffff;
     border-radius: 10px;
-    border: 2px solid #6b2460;
-    color: white;
+    border: 2px solid #000000;
     font-size: 1em;
-    padding: 1vh;
+    padding: 0 0.5vw;
     font-family: "JetBrains Mono", monospace;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-
-.registerForm input:focus {
-    background-color: #6b2460;
-    border: 2px solid #421249;
+.registerForm input:hover, .registerForm input:focus {
+    background-color: #000000;
+    border: 2px solid #000000;
     text-align: left;
     outline: none;
     font-family: "JetBrains Mono", monospace;
-}
-
-
-.registerForm input:hover {
-    background-color: #6b2460;
-    border: 2px solid #421249;
+    color: #ffffff;
 }
 
 
 .registerForm button {
-    width: 70.5vh;
-    margin-top: 1vh;
-    background-color: #8d3b6a;
+    width: 35vw;
+    margin: 3vh 0 0 0;
+    background-color: #ffffff;
     border-radius: 10px;
-    border: 2px solid #6b2460;
+    border: 2px solid #000000;
     height: 6vh;
     font-family: "JetBrains Mono", monospace;
-    color: #fff;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.3em;
     min-height: fit-content;
     min-width: fit-content;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 
 .registerForm button:hover {
-    background-color: #6b2460;
-    border: 2px solid #421249;
+    background-color: #000000;
+    border: 2px solid #000000;
     text-decoration: white;
     cursor: pointer;
+    color: #ffffff;
 }
 
 
@@ -106,16 +100,18 @@
 
 .registerFooter {
     font-family: "JetBrains Mono", monospace;
-    color: #fff;
+    font-size: 1.2em;
 }
 
 
 .registerFooter span, .registerFooter span:visited, .registerFooter span:active {
     color: #390096;
     text-decoration: none;
-    font-weight: bold;
     cursor: pointer;
+    font-weight: bold;
 }
+
+/*-------------------Dark Theme-------------------*/
 
 .registerWrapperDark {
     width: 100%;
@@ -154,21 +150,22 @@
     display: block;
     color: #ffff0a;
     font-size: 1.2em;
-    width: 36vw;
+    width: 35vw;
     font-family: "JetBrains Mono", monospace;
 }
 
 .registerFormDark input {
-    width: 35vw;
-    height: 4vh;
+    width: 34vw;
+    height: 6vh;
     margin: 1vh 0;
     background-color: #1f1f1f;
     border-radius: 10px;
     border: 2px solid #ffffff;
     color: white;
     font-size: 1em;
-    padding: 0.5rem;
+    padding: 0 0.5vw;
     font-family: "JetBrains Mono", monospace;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out
 }
 
 .registerFormDark input:focus {
@@ -180,14 +177,15 @@
 }
 
 .registerFormDark input:hover {
-    background-color: #0f0f0f;
+    background-color: #ffffff;
     border: 2px solid #ffffff;
+    text-decoration: white;
+    color: #000000;
 }
 
 .registerFormDark button {
-    width: 36vw;
-    padding: 1rem;
-    margin-top: 3vh;
+    width: 35vw;
+    margin: 3vh 0 0 0;
     background-color: #1f1f1f;
     border-radius: 10px;
     border: 2px solid #ffffff;
@@ -199,18 +197,21 @@
     font-size: 1.2em;
     min-height: fit-content;
     min-width: fit-content;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out
 }
 
 .registerFormDark button:hover {
-    background-color: #0f0f0f;
+    background-color: #ffffff;
     border: 2px solid #ffffff;
     text-decoration: white;
+    color: #000000;
     cursor: pointer;
 }
 
 .registerFooterDark {
     font-family: "JetBrains Mono", monospace;
     color: #fff;
+    font-size: 1.2em;
 }
 
 .registerFooterDark span, .registerFooterDark span:visited, .registerFooterDark span:active {
@@ -218,4 +219,78 @@
     text-decoration: none;
     font-weight: bold;
     cursor: pointer;
+}
+
+/*------------------- Responsive Adjustments -------------------*/
+
+@media (max-width: 768px) {
+    .registerForm, .registerFormDark {
+        width: 100%;
+        height: 100vh;
+        border: none;
+    }
+
+    .registerForm label, .registerFormDark label {
+        font-size: 1em;
+        width: 70vw;
+    }
+
+    .registerForm input, .registerFormDark input {
+        font-size: 0.9em;
+        width: 68vw;
+        padding: 0 1vw;
+        height: 8vh;
+    }
+
+    .registerForm button, .registerFormDark button {
+        margin: 1rem 0 0 0;
+        font-size: 1em;
+        width: 70vw;
+        height: 2.3rem;
+    }
+
+    .errorMessage {
+        font-size: 1em !important;
+        margin: 0.5rem 0 0 0 !important;
+    }
+
+    .registerFooter, .registerFooterDark {
+        font-size: 1em !important;
+        margin: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .registerForm, .registerFormDark {
+        width: 100%;
+        height: 100vh;
+        border: none;
+    }
+
+    .registerForm label, .registerFormDark label {
+        font-size: 1.2em;
+        width: 70vw;
+    }
+
+    .registerForm input, .registerFormDark input {
+        font-size: 0.9em;
+        height: 6vh;
+        width: 68vw;
+        padding: 0 1vw;
+    }
+
+    .registerForm button, .registerFormDark button {
+        font-size: 0.9em;
+        width: 70vw;
+        height: 2.7rem;
+    }
+
+    .errorMessage {
+        font-size: 1em !important;
+    }
+
+    .registerFooter, .registerFooterDark {
+        font-size: 1em !important;
+        margin: 0;
+    }
 }

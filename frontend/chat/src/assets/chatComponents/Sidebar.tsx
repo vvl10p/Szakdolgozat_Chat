@@ -18,6 +18,7 @@ type SideBarPreview = {
     username: string,
     lastMessage: string,
     lastMessageTimeStamp: string,
+    chatId: string,
 }
 
 export default function Sidebar() {
@@ -41,14 +42,14 @@ export default function Sidebar() {
 
     useEffect(() => {
         handleFriends()
-    },[])
+    }, [])
 
     function mapChats() {
         return (
             <>
                 {friends.map((friend, index) => (
-                    <div key={index} className={"sidebarContent"} onClick={() => {
-                        navigate(`${location.pathname}?id=${friend.id}`)
+                    <div key={index} className={"sidebarContent"} tabIndex={1} onClick={() => {
+                        navigate(`${location.pathname}?id=${friend.chatId}`)
                     }}>
                         <ChatCard friend={friend}/>
                     </div>
@@ -105,12 +106,12 @@ export default function Sidebar() {
                             </div>
                             <div
                                 className={theme === "dark" ? "sidebarUserActionContainerDark" : "sidebarUserActionContainer"}>
-                                <div className={theme === "dark" ? "sidebarButtonDark" : "sidebarButton"}
+                                <div className={theme === "dark" ? "sidebarButtonDark" : "sidebarButton"} tabIndex={1}
                                      onClick={() => navigate("/settings")}>
                                     <span className={"sidebarUserAction sidebarSettingsIcon"}
                                     ><SettingsIcon/></span>
                                 </div>
-                                <div className={theme === "dark" ? "sidebarButtonDark" : "sidebarButton"}
+                                <div className={theme === "dark" ? "sidebarButtonDark" : "sidebarButton"} tabIndex={1}
                                      onClick={handleOpenFriend}>
                                     <span className={theme === "dark" ? "sidebarUserActionDark" : "sidebarUserAction"}
                                     ><GroupsIcon/></span>

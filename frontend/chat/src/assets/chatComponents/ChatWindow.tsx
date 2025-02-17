@@ -1,6 +1,5 @@
 import "./ChatWindow.css"
 import {useEffect, useRef, useState} from "react";
-//import {useSearchParams} from "react-router-dom";
 import {useTheme} from "../../context/ThemeContext.tsx";
 import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
@@ -14,15 +13,35 @@ import BackupTableIcon from '@mui/icons-material/BackupTable';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {useChat} from "../../context/ChatContext.tsx";
+import {useSearchParams} from "react-router-dom";
+import MessageBubble from "./MessageBubble.tsx";
 
+interface Message {
+    event: string;
+    chatId: string;
+    sender: string;
+    content: string;
+}
 
 function ChatWindow() {
     const {theme} = useTheme()
+    const {socket, sendMessage} = useChat()
+    const [messages, setMessages] = useState<Message[]>([])
 
-    //const searchParams = useSearchParams()
+    const [searchParams, _] = useSearchParams()
     const [inputText, setInputText] = useState<string>('')
     const [, setLineCount] = useState<number>(1)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+    const chatContainerRef = useRef<HTMLDivElement | null>(null)
+
+    useEffect(() => {
+        const container = chatContainerRef.current
+        if (container) {
+            container.scrollTop = container.scrollHeight
+        }
+    }, [messages])
 
     const adjustHeight = () => {
         if (textareaRef.current) {
@@ -92,6 +111,23 @@ function ChatWindow() {
         }
     }
 
+    useEffect(() => {
+        if (socket.current) {
+            const handleMessage = (ev: MessageEvent) => {
+                const incomingMessage = JSON.parse(ev.data)
+                console.log("Message from WebSocket:", incomingMessage)
+
+                setMessages((prevMessages) => [...prevMessages, incomingMessage])
+            }
+
+            socket.current.onmessage = handleMessage
+
+            return () => {
+                socket.current!.onmessage = handleMessage
+            }
+        }
+    }, [socket.current])
+
     const handleFileClick = () => {
         if (inputFileRef.current) {
             inputFileRef.current.click()
@@ -133,17 +169,6 @@ function ChatWindow() {
         }
     }
 
-    /*
-    const messageGetRequestOptions = {
-        method:"GET",
-        headers:{"Content-type":"application/json","jwt":localStorage.getItem("jwt")},
-        body:JSON.stringify({
-            message: ms
-        }
-        )
-    }
-*/
-
     return (
         <>
             <div className={theme === "dark" ? "chatWindowContainerDark" : "chatWindowContainer"}>
@@ -152,8 +177,20 @@ function ChatWindow() {
                         <h1>Header</h1>
                     </div>
                     <div
-                        className={theme === "dark" ? "chatWindowMessageHistoryContainerDark" : "chatWindowMessageHistoryContainer"}>
-                        <p>messages</p>
+                        className={theme === "dark" ? "chatWindowMessageHistoryContainerDark" : "chatWindowMessageHistoryContainer"}
+                        ref={chatContainerRef}>
+                        <h3>Chat Messages:</h3>
+                        {messages.length > 0 ? (
+                            <div>
+                                {messages.filter((message) => message.chatId == searchParams.get("id")).map((message, index) => (
+                                    <div key={index}>
+                                        <MessageBubble key={index} message={message.content}/>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div>No messages yet.</div>
+                        )}
                     </div>
                     <div className={theme === "dark" ? "chatWindowControlContainerDark" : "chatWindowControlContainer"}>
                         <div
@@ -214,7 +251,8 @@ function ChatWindow() {
                                     placeholder={"type your message here!"} rows={1} ref={textareaRef}>
                                 </textarea>
                             </div>
-                            <div className={theme === "dark" ? "chatWindowControlSendDark" : "chatWindowControlSend"}>
+                            <div className={theme === "dark" ? "chatWindowControlSendDark" : "chatWindowControlSend"}
+                                 onClick={() => sendMessage(inputText, searchParams.get("id")!)}>
                                 <button
                                     className={theme === "dark" ? "chatWindowControlButtonDark" : "chatWindowControlButton"}>
                                     <SendIcon/>

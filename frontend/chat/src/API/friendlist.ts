@@ -29,7 +29,7 @@ export async function FriendRecommended(token: string) {
 }
 
 export async function UpdateFriendStatus(token: string, friendId: string, status: string) {
-    console.log(token,friendId,status)
+    console.log(token, friendId, status)
     const requestOptions = {
         method: "PUT",
         headers: {

@@ -13,11 +13,47 @@ func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
+func CreateChat(store *Store, Ids []int, subject string) error {
+	if len(Ids) > 2 && subject == "" || len(Ids) < 2 {
+		return nil
+	}
+	if len(Ids) == 2 {
+		result, err := store.db.Exec("INSERT INTO Conversation (subject) VALUES (?)", "")
+		if err != nil {
+			return err
+		}
+		chatId, err := result.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		for _, id := range Ids {
+			store.db.Exec("INSERT INTO UserConversation (UserID, ConversationID) VALUES (?,?)", id, chatId)
+		}
+	} else if len(Ids) > 2 {
+		result, err := store.db.Exec("INSERT INTO Conversation (Subject) VALUES (?)", subject)
+		if err != nil {
+			return err
+		}
+		chatId, err := result.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		for _, id := range Ids {
+			store.db.Exec("INSERT INTO UserConversation (UserID, ConversationID) VALUES (?,?)", id, chatId)
+		}
+	} else {
+		return nil
+	}
+	return nil
+}
+
 func (store *Store) GetFriendsForSidebar(userId int) ([]types.UserFriendStatus, error) {
 	var rows *sql.Rows
 	var err error
 
-	rows, err = store.db.Query("SELECT u.UserID, u.Username, u.AvatarPath, f.Status, f.FriendUserID FROM User u LEFT JOIN Friend f ON (u.UserID = f.FriendUserID AND f.UserID = ?) OR (u.UserID = f.UserID AND f.FriendUserID = ?) WHERE u.UserID != ?", userId, userId, userId)
+	rows, err = store.db.Query("SELECT u.UserID, u.Username, u.AvatarPath, f.Status, f.FriendUserID, c.ConversationID FROM User u LEFT JOIN Friend f ON (u.UserID = f.FriendUserID AND f.UserID = ?) OR (u.UserID = f.UserID AND f.FriendUserID = ?) LEFT JOIN UserConversation cm1 ON cm1.UserID = u.UserID INNER JOIN UserConversation cm2 ON cm1.ConversationID = cm2.ConversationID AND cm2.UserID = ? LEFT JOIN Conversation c ON c.ConversationID = cm1.ConversationID AND c.ConversationID = cm2.ConversationID WHERE u.UserID != ?", userId, userId, userId, userId)
 	defer rows.Close()
 
 	var users []types.UserFriendStatus
@@ -27,6 +63,7 @@ func (store *Store) GetFriendsForSidebar(userId int) ([]types.UserFriendStatus, 
 		var avatarPath sql.NullString
 		var status sql.NullString
 		var friendId sql.NullString
+		var chatId sql.NullString
 
 		err := rows.Scan(
 			&u.UserID,
@@ -34,6 +71,7 @@ func (store *Store) GetFriendsForSidebar(userId int) ([]types.UserFriendStatus, 
 			&avatarPath,
 			&status,
 			&friendId,
+			&chatId,
 		)
 		if err != nil {
 			return nil, err
@@ -52,6 +90,11 @@ func (store *Store) GetFriendsForSidebar(userId int) ([]types.UserFriendStatus, 
 			u.FriendId = friendId.String
 		} else {
 			u.FriendId = ""
+		}
+		if chatId.Valid {
+			u.ChatId = chatId.String
+		} else {
+			u.ChatId = ""
 		}
 
 		if u.Status == "accepted" {
@@ -165,6 +208,7 @@ func (store *Store) UpdateFriendStatus(userId int, friendId int, status string) 
 				if err != nil {
 					return err
 				}
+				CreateChat(store, []int{userId, friendId}, "")
 				return nil
 			} else if (element.Status == "pending" || element.Status == "accepted") && status == "" {
 				_, err := store.db.Exec("DELETE FROM Friend WHERE (UserID = ? AND FriendUserID = ?) OR (UserID = ? AND FriendUserID = ?)", userId, friendId, friendId, userId)

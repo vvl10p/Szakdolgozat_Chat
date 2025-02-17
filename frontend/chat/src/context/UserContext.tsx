@@ -1,20 +1,14 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 
 type User = {
-    id: number | null,
-    username: string | null,
-    avatarPath: string | null,
-}
-
-const defaultUser: User = {
-    id: null,
-    username: null,
-    avatarPath: null,
+    id: number,
+    username: string,
+    avatarPath: string,
 }
 
 interface UserContextType {
-    user: User | null
-    setUser: (user: User | null) => void
+    user?: User
+    setUser: (user: User) => void
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -32,7 +26,7 @@ interface UserProviderProps {
 }
 
 export const UserProvider = ({children}: UserProviderProps) => {
-    const [user, setUser] = useState<User | null>(defaultUser)
+    const [user, setUser] = useState<User>()
 
     useEffect(() => {
         const storedUser = localStorage.getItem("USER")

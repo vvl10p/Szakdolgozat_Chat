@@ -36,7 +36,6 @@ func scanRowsIntoMessages(rows *sql.Rows) (*types.Message, error) {
 	err := rows.Scan(
 		&message.ID,
 		&message.SenderId,
-		&message.RecipientId,
 		&message.Content,
 		&message.CreatedAt,
 		&message.ConversationId,
@@ -48,7 +47,7 @@ func scanRowsIntoMessages(rows *sql.Rows) (*types.Message, error) {
 }
 
 func (store *Store) StoreMessage(message types.Message) error {
-	_, err := store.db.Exec("INSERT INTO Message (SenderID,RecipientID,Content,Timestamp,ConversationID)", message.SenderId, message.RecipientId, message.Content, message.CreatedAt, message.ConversationId)
+	_, err := store.db.Exec("INSERT INTO Message (SenderID,Content,Timestamp,ConversationID) VALUES (?,?,?,?)", message.SenderId, message.Content, message.CreatedAt, message.ConversationId)
 	if err != nil {
 		return err
 	}

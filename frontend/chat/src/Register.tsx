@@ -91,7 +91,8 @@ function Register() {
                                    setConfPass(event.target.value)
                                }}/>
                         <div className={theme === "dark" ? "registerButtonContainerDark" : "registerButtonContainer"}>
-                            <button type={"button"}
+                            <button className={theme === "dark" ? "registerButtonDark" : "registerButton"}
+                                    type={"button"}
                                     onClick={() => handleRegisterRequest()}>Register
                             </button>
                         </div>

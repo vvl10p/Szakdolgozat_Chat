@@ -107,32 +107,37 @@ function FriendList() {
                                     {user.status === "pending" ? (
                                         isCurrentUserFriendRequest ? (
                                             <>
-                                                <div className="friendListAction" onClick={() => updateUserStatus(user.id, "")}>
+                                                <div className="friendListAction"
+                                                     onClick={() => updateUserStatus(user.id, "")}>
                                                     <span className="friendListActionIcon">
-                                                        <PersonRemoveIcon />
+                                                        <PersonRemoveIcon/>
                                                     </span>
                                                 </div>
-                                                <div className="friendListAction" onClick={() => updateUserStatus(user.id, "blocked")}>
+                                                <div className="friendListAction"
+                                                     onClick={() => updateUserStatus(user.id, "blocked")}>
                                                     <span className="friendListActionIcon">
-                                                        <BlockIcon />
+                                                        <BlockIcon/>
                                                     </span>
                                                 </div>
                                             </>
                                         ) : (
                                             <>
-                                                <div className="friendListAction" onClick={() => updateUserStatus(user.id, "accepted")}>
+                                                <div className="friendListAction"
+                                                     onClick={() => updateUserStatus(user.id, "accepted")}>
                                                     <span className="friendListActionIcon">
-                                                        <PersonAddIcon />
+                                                        <PersonAddIcon/>
                                                     </span>
                                                 </div>
-                                                <div className="friendListAction" onClick={() => updateUserStatus(user.id, "")}>
+                                                <div className="friendListAction"
+                                                     onClick={() => updateUserStatus(user.id, "")}>
                                                     <span className="friendListActionIcon">
-                                                        <PersonRemoveIcon />
+                                                        <PersonRemoveIcon/>
                                                     </span>
                                                 </div>
-                                                <div className="friendListAction" onClick={() => updateUserStatus(user.id, "blocked")}>
+                                                <div className="friendListAction"
+                                                     onClick={() => updateUserStatus(user.id, "blocked")}>
                                                     <span className="friendListActionIcon">
-                                                        <BlockIcon />
+                                                        <BlockIcon/>
                                                     </span>
                                                 </div>
                                             </>
@@ -141,30 +146,34 @@ function FriendList() {
                                         <>
                                             <div className="friendListAction">
                                                 <span className="friendListActionIcon">
-                                                    <ChatBubbleIcon />
+                                                    <ChatBubbleIcon/>
                                                 </span>
                                             </div>
-                                            <div className="friendListAction" onClick={() => updateUserStatus(user.id, "")}>
+                                            <div className="friendListAction"
+                                                 onClick={() => updateUserStatus(user.id, "")}>
                                                 <span className="friendListActionIcon">
-                                                    <PersonRemoveIcon />
+                                                    <PersonRemoveIcon/>
                                                 </span>
                                             </div>
-                                            <div className="friendListAction" onClick={() => updateUserStatus(user.id, "blocked")}>
+                                            <div className="friendListAction"
+                                                 onClick={() => updateUserStatus(user.id, "blocked")}>
                                                 <span className="friendListActionIcon">
-                                                    <BlockIcon />
+                                                    <BlockIcon/>
                                                 </span>
                                             </div>
                                         </>
                                     ) : (
                                         <>
-                                            <div className="friendListAction" onClick={() => updateUserStatus(user.id, "pending")}>
+                                            <div className="friendListAction"
+                                                 onClick={() => updateUserStatus(user.id, "pending")}>
                                                 <span className="friendListActionIcon">
-                                                    <PersonAddIcon />
+                                                    <PersonAddIcon/>
                                                 </span>
                                             </div>
-                                            <div className="friendListAction" onClick={() => updateUserStatus(user.id, "blocked")}>
+                                            <div className="friendListAction"
+                                                 onClick={() => updateUserStatus(user.id, "blocked")}>
                                                 <span className="friendListActionIcon">
-                                                    <BlockIcon />
+                                                    <BlockIcon/>
                                                 </span>
                                             </div>
                                         </>

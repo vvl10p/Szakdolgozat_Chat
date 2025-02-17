@@ -1,6 +1,8 @@
 body {
     color: #fff;
     font-family: "JetBrains Mono", monospace;
+    margin: 0;
+    padding: 0;
 }
 
 .mainWrapper {
@@ -34,6 +36,14 @@ body {
     text-align: center;
 }
 
+.mainContentContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
 .mainContentContainer button, .mainContentContainer button:visited {
     margin: auto 10vh;
     color: #000000;
@@ -48,7 +58,7 @@ body {
     font-size: 1.3em;
     min-height: fit-content;
     min-width: fit-content;
-    transition: ease-in-out 0.3s;
+    transition: background-color ease-in-out 0.3s;
 }
 
 .mainContentContainer button:hover, .mainContentContainer button:focus, .mainContentContainer button:focus-visible {
@@ -92,8 +102,17 @@ body {
     text-align: center;
 }
 
+.mainContentContainerDark {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12em;
+    padding: 1rem;
+}
+
 .mainContentContainerDark button, .mainContentContainerDark button:visited {
-    margin: 5vh 5vw;
     color: #fff;
     background-color: #1f1f1f;
     border-radius: 10px;
@@ -106,11 +125,51 @@ body {
     font-size: 1.3em;
     min-height: fit-content;
     min-width: fit-content;
+    transition: background-color ease-in-out 0.3s;
 }
 
 .mainContentContainerDark button:hover, .mainContentContainerDark button:focus, .mainContentContainerDark button:focus-visible {
-    background-color: #0f0f0f;
+    background-color: #ffffff;
     border: 2px solid #ffffff;
-    text-decoration: white;
+    text-decoration: #000000;
+    color: #000000;
     cursor: pointer;
+}
+
+/*-------------------Responsive Adjustments-------------------*/
+
+@media (max-width: 768px) {
+    .mainContainer, .mainContainerDark {
+        border: none;
+        height: 100vh;
+        width: 100%;
+    }
+
+    .mainHeaderContainer, .mainHeaderContainerDark {
+        font-size: 1.7em;
+    }
+
+    .mainContentContainer, .mainContentContainerDark {
+        gap: 1.5em;
+    }
+
+    .mainContentContainer button,
+    .mainContentContainerDark button {
+        width: 25vw;
+        height: 12vh;
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainHeaderContainer, .mainHeaderContainerDark {
+        font-size: 1.5em;
+    }
+
+    .mainContentContainer button,
+    .mainContentContainerDark button {
+        width: 90%;
+        height: 6vh;
+        font-size: 1.2em;
+    }
 }

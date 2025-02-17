@@ -21,6 +21,7 @@ func NewAPIServer(address string, db *sql.DB) *APIServer {
 		db:      db,
 	}
 }
+
 func (s *APIServer) Run() error {
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173"},

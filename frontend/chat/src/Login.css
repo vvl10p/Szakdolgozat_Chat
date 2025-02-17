@@ -34,7 +34,7 @@
     font-size: 1em;
     padding: 1vh;
     font-family: "JetBrains Mono", monospace;
-    transition: ease-in-out 0.3s;
+    transition: background-color ease-in-out 0.3s;
 }
 
 
@@ -60,7 +60,7 @@
     font-size: 1.3em;
     min-height: fit-content;
     min-width: fit-content;
-    transition: ease-in-out 0.3s;
+    transition: background-color ease-in-out 0.3s;
 }
 
 .loginContainer button:hover {
@@ -73,7 +73,7 @@
 
 .loginForm label {
     display: block;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     width: 36vw;
     font-family: "JetBrains Mono", monospace;
 }
@@ -86,6 +86,7 @@
 }
 
 .loginFooter {
+    font-size: 1.5em;
     font-family: "JetBrains Mono", monospace;
 }
 
@@ -135,20 +136,14 @@
     font-size: 1em;
     padding: 0.5rem;
     font-family: "JetBrains Mono", monospace;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out
 }
 
-.loginFormDark input:focus {
-    background-color: #0f0f0f;
+.loginFormDark input:hover, .loginFormDark input:focus {
+    background-color: #ffffff;
     border: 2px solid #ffffff;
-    text-align: left;
-    outline: none;
-    font-family: "JetBrains Mono", monospace;
-    color: white;
-}
-
-.loginFormDark input:hover {
-    background-color: #0f0f0f;
-    border: 2px solid #ffffff;
+    text-decoration: white;
+    color: #000000;
 }
 
 .loginFormDark button {
@@ -165,19 +160,20 @@
     font-size: 1.3em;
     min-height: fit-content;
     min-width: fit-content;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out
 }
 
 .loginContainerDark button:hover {
-    background-color: #0f0f0f;
+    background-color: #ffffff;
     border: 2px solid #ffffff;
     text-decoration: white;
-    cursor: pointer;
+    color: #000000;
 }
 
 .loginFormDark label {
     display: block;
     color: #ffff0a;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     width: 36vw;
     font-family: "JetBrains Mono", monospace;
 }
@@ -185,11 +181,85 @@
 .loginFooterDark {
     font-family: "JetBrains Mono", monospace;
     color: white;
+    font-size: 1.2em;
 }
 
 .loginFooterDark span {
     color: #ffff0a;
-    text-decoration: none;
+    text-decoration: underline;
     cursor: pointer;
     font-weight: bold;
+}
+
+/*------------------- Responsive Adjustments -------------------*/
+
+@media (max-width: 768px) {
+    .loginForm, .loginFormDark {
+        width: 100%;
+        height: 100vh;
+        border: none;
+    }
+
+    .loginForm input, .loginFormDark input {
+        height: 12vh;
+        width: 68vw;
+        padding: 0 1vh;
+        font-size: 1em;
+    }
+
+    .loginForm button, .loginFormDark button {
+        margin: 2rem 0 0 0;
+        height: 12vh;
+        width: 70vw;
+        font-size: 1em;
+    }
+
+    .loginForm label, .loginFormDark label {
+        font-size: 1.2em;
+        width: 70vw;
+    }
+
+    .errorMessage {
+        font-size: 1em !important;
+    }
+
+    .loginFooter, .loginFooterDark {
+        font-size: 1em !important;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .loginForm, .loginFormDark {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .loginForm input, .loginFormDark input {
+        font-size: 1em;
+        width: 68vw;
+        height: 8vh;
+        padding: 0 1vw;
+    }
+
+    .loginForm button, .loginFormDark button {
+        margin: 2rem 0 0 0;
+        font-size: 0.9rem;
+        height: 8vh;
+        width: 70vw;
+    }
+
+    .loginForm label, .loginFormDark label {
+        font-size: 1.2em;
+        width: 70vw;
+    }
+
+    .errorMessage {
+        font-size: 0.9em !important;
+    }
+
+    .loginFooter, .loginFooterDark {
+        font-size: 1em !important;
+    }
+
 }

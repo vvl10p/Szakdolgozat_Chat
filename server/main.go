@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"log"
+	"fmt"
 	"main/api"
 	db2 "main/db"
 )
@@ -12,6 +12,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	defer db.Close()
 	initStorage(db)
 
@@ -27,5 +28,5 @@ func initStorage(db *sql.DB) {
 		panic(err)
 	}
 
-	log.Println("Successfully connected to database")
+	fmt.Println("Successfully connected to database")
 }

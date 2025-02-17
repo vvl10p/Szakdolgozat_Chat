@@ -46,7 +46,6 @@ func (h *Handler) handleSendMessage(w http.ResponseWriter, r *http.Request) {
 
 	err := h.store.StoreMessage(types.Message{
 		SenderId:       payload.SenderId,
-		RecipientId:    payload.RecipientId,
 		Content:        payload.Content,
 		ConversationId: payload.ConversationId,
 	})

@@ -27,15 +27,14 @@ type FriendStore interface {
 type Message struct {
 	ID             int       `json:"id"`
 	SenderId       int       `json:"sender_id"`
-	RecipientId    int       `json:"recipient_id"`
 	Content        string    `json:"content"`
 	CreatedAt      time.Time `json:"created_at"`
 	ConversationId int       `json:"conversation_id"`
+	SeenBy         string    `json:"seen_by"`
 }
 
 type MessagePayload struct {
 	SenderId       int    `json:"sender_id"`
-	RecipientId    int    `json:"recipient_id"`
 	Content        string `json:"content"`
 	ConversationId int    `json:"conversation_id"`
 }
@@ -81,6 +80,7 @@ type UserFriendStatus struct {
 	AvatarPath string `json:"avatarPath"`
 	Status     string `json:"status"`
 	FriendId   string `json:"friendId"`
+	ChatId     string `json:"chatId"`
 }
 
 type FriendPayload struct {

@@ -52,6 +52,7 @@ func (h *Handler) GetFriendsForSidebar(w http.ResponseWriter, r *http.Request) {
 			AvatarPath: user.AvatarPath,
 			Status:     user.Status,
 			FriendId:   user.FriendId,
+			ChatId:     user.ChatId,
 		}
 		res = append(res, basicInfo)
 	}

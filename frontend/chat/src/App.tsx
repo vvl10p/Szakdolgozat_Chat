@@ -55,8 +55,11 @@ function App() {
                         <p>Create an account or login in</p>
                     </div>
                     <div className={theme === "dark" ? "mainContentContainerDark" : "mainContentContainer"}>
-                        <button ref={loginButtonRef} onClick={() => handleNavigate('/login')} tabIndex={0}>Log in (L)</button>
-                        <button ref={registerButtonRef} onClick={() => handleNavigate('/register')} tabIndex={0}>Register (R)</button>
+                        <button ref={loginButtonRef} onClick={() => handleNavigate('/login')} tabIndex={0}>Log in (L)
+                        </button>
+                        <button ref={registerButtonRef} onClick={() => handleNavigate('/register')}
+                                tabIndex={0}>Register (R)
+                        </button>
                     </div>
                 </div>
             </div>

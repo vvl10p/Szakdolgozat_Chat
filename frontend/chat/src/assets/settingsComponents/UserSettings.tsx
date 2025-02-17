@@ -82,8 +82,8 @@ function UserSettings() {
 
     return (
         <>
-            <div className={"userSettingsContainer"}>
-                <div className={"userSettingsButtonContainer"}>
+            <div className={theme === "dark" ? "userSettingsContainerDark" : "userSettingsContainer"}>
+                <div className={theme === "dark" ? "userSettingsButtonContainerDark" : "userSettingsButtonContainer"}>
                     <button className={theme === "dark" ? "userSettingsChangeButtonDark" : "userSettingsChangeButton"}
                             onClick={handleOpenAvatar}>Change
                         avatar
@@ -94,8 +94,10 @@ function UserSettings() {
                     onClose={handleCloseAvatar}
                 >
                     <Box sx={style}>
-                        <div className={"userSettingsAvatarContainer"}>
-                            <div className={"userSettingsAvatarImageContainer"}>
+                        <div
+                            className={theme === "dark" ? "userSettingsAvatarContainerDark" : "userSettingsAvatarContainer"}>
+                            <div
+                                className={theme === "dark" ? "userSettingsAvatarImageContainerDark" : "userSettingsAvatarImageContainer"}>
                                 <img className={"userSettingsAvatarImage"}
                                      src={selectedImage || avatarPlaceholder}
                                      alt={"AvatarImagePlaceholder"}
@@ -109,18 +111,23 @@ function UserSettings() {
                                 accept={"image/*"}
                                 onChange={handleFileChange}
                             />
-                            <div className={"userSettingsAvatarButtonContainer"}>
-                                <button className={"userSettingsAvatarButton"} onClick={handleCloseAvatar}>Close
+                            <div
+                                className={theme === "dark" ? "userSettingsAvatarButtonContainerDark" : "userSettingsAvatarButtonContainer"}>
+                                <button
+                                    className={theme === "dark" ? "userSettingsAvatarButtonDark" : "userSettingsAvatarButton"}
+                                    onClick={handleCloseAvatar}>Close
                                 </button>
-                                <button className={"userSettingsAvatarButton"}
-                                        onClick={handleAvatarUploadRequest}>Change avatar
+                                <button
+                                    className={theme === "dark" ? "userSettingsAvatarButtonDark" : "userSettingsAvatarButton"}
+                                    onClick={handleAvatarUploadRequest}>Change avatar
                                 </button>
                             </div>
                             <span>{errorMessage}</span>
                         </div>
                     </Box>
                 </Modal>
-                <div className={"userSettingsButtonContainer"}>
+                <div
+                    className={theme === "dark" ? "userSettingsAvatarButtonContainerDark" : "userSettingsAvatarButtonContainer"}>
                     <button className={theme === "dark" ? "userSettingsChangeButtonDark" : "userSettingsChangeButton"}
                             onClick={handleOpenPassword}>Change
                         password
@@ -137,14 +144,22 @@ function UserSettings() {
                             <label>Confirm new password</label>
                             <input type={"password"}></input>
                             <button>Change password</button>
+                            <p>Error message</p>
                         </div>
                     </Box>
                 </Modal>
-                <div className={"userSettingsButtonContainer"}>
-                    <button>Manage Blocked Users</button>
+                <div
+                    className={theme === "dark" ? "userSettingsAvatarButtonContainerDark" : "userSettingsAvatarButtonContainer"}>
+                    <button
+                        className={theme === "dark" ? "userSettingsAvatarButtonDark" : "userSettingsAvatarButton"}>Manage
+                        Blocked Users
+                    </button>
                 </div>
-                <div className={"userSettingsButtonContainer"}>
-                    <button onClick={handleLogOut}>Log out</button>
+                <div
+                    className={theme === "dark" ? "userSettingsAvatarButtonContainerDark" : "userSettingsAvatarButtonContainer"}>
+                    <button className={theme === "dark" ? "userSettingsAvatarButtonDark" : "userSettingsAvatarButton"}
+                            onClick={handleLogOut}>Log out
+                    </button>
                 </div>
             </div>
         </>
