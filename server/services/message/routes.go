@@ -1,9 +1,9 @@
 package message
 
 import (
-	"fmt"
-	"github.com/go-playground/validator/v10"
+	"errors"
 	"github.com/gorilla/mux"
+	"main/services/auth"
 	"main/types"
 	"main/utils"
 	"net/http"
@@ -18,40 +18,50 @@ func NewHandler(store types.MessageStore) *Handler {
 }
 
 func (handler *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/getMessage", handler.handleGetMessage).Methods(http.MethodGet)
-	router.HandleFunc("/sendMessage", handler.handleSendMessage).Methods(http.MethodPost)
+	router.HandleFunc("/getMessage/{id}", handler.handleGetMessage).Methods(http.MethodGet)
+	router.HandleFunc("/deleteMessage/{id}", handler.handleDeleteMessage).Methods(http.MethodDelete)
 }
 
 func (handler *Handler) handleGetMessage(w http.ResponseWriter, r *http.Request) {
-	ms, err := handler.store.GetMessages()
+	token := r.Header.Get("Authorization")
+	_, err := auth.ValidateJWT(token)
+	if err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		utils.WriteError(w, http.StatusBadRequest, errors.New("missing id parameter"))
+		return
+	}
+
+	ms, err := handler.store.GetMessages(id)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
-	utils.WriteJSON(w, http.StatusOK, ms)
+	err = utils.WriteJSON(w, http.StatusOK, ms)
+	if err != nil {
+		return
+	}
 }
 
-func (h *Handler) handleSendMessage(w http.ResponseWriter, r *http.Request) {
-	var payload types.MessagePayload
-	if err := utils.ParseJSON(r, &payload); err != nil {
-		utils.WriteError(w, http.StatusBadRequest, err)
+func (handler *Handler) handleDeleteMessage(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	_, err := auth.ValidateJWT(token)
+	if err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
 
-	if err := utils.Validate.Struct(payload); err != nil {
-		errors := err.(validator.ValidationErrors)
-		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("validation error: %v", errors))
-		return
-	}
-
-	err := h.store.StoreMessage(types.Message{
-		SenderId:       payload.SenderId,
-		Content:        payload.Content,
-		ConversationId: payload.ConversationId,
-	})
+	msgid := r.URL.Query().Get("msgid")
+	err = handler.store.DeleteMessages(msgid)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+	}
+	err = utils.WriteJSON(w, http.StatusOK, nil)
+	if err != nil {
 		return
 	}
-	utils.WriteJSON(w, http.StatusCreated, nil)
 }

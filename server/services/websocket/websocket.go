@@ -3,11 +3,10 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"log"
 	db2 "main/db"
-	"main/services/auth"
 	"main/types"
 	"main/utils"
 	"net/http"
@@ -42,10 +41,10 @@ var chatRooms = make(map[string]*ChatRoom)
 var chatRoomsMu sync.Mutex
 
 type Message struct {
-	Event   string `json:"event"`
-	ChatID  string `json:"chatId"`
-	Sender  string `json:"sender"`
-	Content string `json:"content"`
+	Event   string `json:"Event"`
+	ChatID  string `json:"ChatID"`
+	Sender  string `json:"Sender"`
+	Content string `json:"Content"`
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +108,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("User %s joined Chat Room %s\n", userID, chatID)
 	}
 
-	listenForMessages(conn, chatIDs, userID)
+	store.listenForMessages(conn, chatIDs, userID)
 }
 
 func initStorage(db *sql.DB) {
@@ -119,7 +118,7 @@ func initStorage(db *sql.DB) {
 	}
 }
 
-func broadcastMessage(room *ChatRoom, message Message, userID string) {
+func broadcastMessage(room *ChatRoom, message *types.Message, userID string) {
 	room.mu.Lock()
 	defer room.mu.Unlock()
 
@@ -161,7 +160,7 @@ func removeConnectionFromRoom(room *ChatRoom, conn *websocket.Conn) {
 	}
 }
 
-func listenForMessages(conn *websocket.Conn, chatIDs []string, userID string) {
+func (store *Store) listenForMessages(conn *websocket.Conn, chatIDs []string, userID string) {
 	defer func() {
 		for _, chatID := range chatIDs {
 			chatRoomsMu.Lock()
@@ -189,47 +188,59 @@ func listenForMessages(conn *websocket.Conn, chatIDs []string, userID string) {
 		}
 
 		if room, exists := chatRooms[message.ChatID]; exists {
-			broadcastMessage(room, message, userID)
+			msgtosend, err := saveMessage(store, message)
+			broadcastMessage(room, msgtosend, userID)
+			if err != nil {
+				log.Println("Error saving message:", err)
+				return
+			}
 		} else {
 			fmt.Printf("User %s tried to send a message to a non-existent Chat Room %s\n", userID, message.ChatID)
 		}
 	}
 }
 
-func saveMessage(store *Store, message Message) error {
-	_, err := store.db.Exec("INSERT INTO Message (SenderID, Content, Timestamp, ConversationID, SeenBy) VALUES (?,?,?,?,?)", message.Sender, message.Content, time.Now().Format(time.RFC3339), message.ChatID, "")
+func saveMessage(store *Store, message Message) (*types.Message, error) {
+	encryptedMessage, err := utils.EncryptMessage(message.Content)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
-}
 
-func handleSaveMessage(w http.ResponseWriter, r *http.Request) {
-	token := r.Header.Get("Authorization")
-	_, err := auth.ValidateJWT(token)
+	if len(encryptedMessage) == 0 {
+		return nil, errors.New("encrypted message is empty")
+	}
+
+	res, err := store.db.Exec("INSERT INTO Message (SenderID, Content, Timestamp, ConversationID, SeenBy) VALUES (?,?,?,?,?)", message.Sender, encryptedMessage, time.Now().Format(time.RFC3339), message.ChatID, "")
 	if err != nil {
-		http.Error(w, "Invalid token", http.StatusUnauthorized)
-		return
+		return nil, err
 	}
 
-	var payload types.MessagePayload
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		http.Error(w, "Invalid payload", http.StatusBadRequest)
-		return
+	messageToSend := new(types.Message)
+	msgID, err := res.LastInsertId()
+	if err != nil {
+		return nil, err
 	}
 
-	if err := utils.Validate.Struct(payload); err != nil {
-		errors := err.(validator.ValidationErrors)
-		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("validation error: %v", errors))
-		return
+	messageToSend.ID = int(msgID)
+	messageToSend.SenderID, err = strconv.Atoi(message.Sender)
+	if err != nil {
+		return nil, err
 	}
-	
-	utils.WriteJSON(w, http.StatusCreated, nil)
+
+	messageToSend.Content = message.Content
+	messageToSend.Timestamp = time.Now()
+	messageToSend.ConversationID, err = strconv.Atoi(message.ChatID)
+	if err != nil {
+		return nil, err
+	}
+
+	messageToSend.SeenBy = ""
+
+	return messageToSend, nil
 }
 
 func main() {
 	http.HandleFunc("/ws", handleWebSocket)
-	http.HandleFunc("/message/save", handleSaveMessage)
 	log.Println("WebSocket server started on :5175")
 	log.Fatal(http.ListenAndServe(":5175", nil))
 }

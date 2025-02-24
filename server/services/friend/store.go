@@ -87,14 +87,14 @@ func (store *Store) GetFriendsForSidebar(userId int) ([]types.UserFriendStatus, 
 			u.Status = ""
 		}
 		if friendId.Valid {
-			u.FriendId = friendId.String
+			u.FriendID = friendId.String
 		} else {
-			u.FriendId = ""
+			u.FriendID = ""
 		}
 		if chatId.Valid {
-			u.ChatId = chatId.String
+			u.ChatID = chatId.String
 		} else {
-			u.ChatId = ""
+			u.ChatID = ""
 		}
 
 		if u.Status == "accepted" {
@@ -149,9 +149,9 @@ func (store *Store) GetUsersWithStatus(userId int, searchQuery string) ([]types.
 			u.Status = ""
 		}
 		if friendId.Valid {
-			u.FriendId = friendId.String
+			u.FriendID = friendId.String
 		} else {
-			u.FriendId = ""
+			u.FriendID = ""
 		}
 
 		if u.Status != "blocked" {
@@ -179,8 +179,8 @@ func (store *Store) UpdateFriendStatus(userId int, friendId int, status string) 
 		var u types.Friend
 
 		err := rows.Scan(
-			&u.UserId,
-			&u.FriendId,
+			&u.UserID,
+			&u.FriendID,
 			&u.Status,
 		)
 		if err != nil {

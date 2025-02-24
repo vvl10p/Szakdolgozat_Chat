@@ -6,37 +6,31 @@ import (
 
 type UserStore interface {
 	GetUserByUsername(username string) (*User, error)
-	GetUserById(userId int) (*User, error)
+	GetUserById(userID int) (*User, error)
 	CreateUser(User) error
-	UploadAvatar(userId int, avatarString string) error
-	GetUserData(userId int) (username string, avatarPath string, err error)
-	GetUsers(userId int, searchQuery string) ([]UserBasicInfo, error)
+	UploadAvatar(userID int, avatarString string) error
+	GetUserData(userID int) (username string, avatarPath string, err error)
+	GetUsers(userID int, searchQuery string) ([]UserBasicInfo, error)
 }
 
 type MessageStore interface {
-	GetMessages() ([]Message, error)
-	StoreMessage(Message) error
+	GetMessages(ChatID string) ([]Message, error)
+	DeleteMessages(ChatID string) error
 }
 
 type FriendStore interface {
-	GetUsersWithStatus(userId int, searchQuery string) ([]UserFriendStatus, error)
-	UpdateFriendStatus(userId int, friendId int, status string) error
-	GetFriendsForSidebar(userId int) ([]UserFriendStatus, error)
+	GetUsersWithStatus(userID int, searchQuery string) ([]UserFriendStatus, error)
+	UpdateFriendStatus(userID int, friendId int, status string) error
+	GetFriendsForSidebar(userID int) ([]UserFriendStatus, error)
 }
 
 type Message struct {
-	ID             int       `json:"id"`
-	SenderId       int       `json:"sender_id"`
-	Content        string    `json:"content"`
-	CreatedAt      time.Time `json:"created_at"`
-	ConversationId int       `json:"conversation_id"`
-	SeenBy         string    `json:"seen_by"`
-}
-
-type MessagePayload struct {
-	SenderId       int    `json:"sender_id"`
-	Content        string `json:"content"`
-	ConversationId int    `json:"conversation_id"`
+	ID             int       `json:"MsgID"`
+	SenderID       int       `json:"Sender"`
+	Content        string    `json:"Content"`
+	Timestamp      time.Time `json:"Timestamp"`
+	ConversationID int       `json:"ConversationID"`
+	SeenBy         string    `json:"SeenBy"`
 }
 
 type User struct {
@@ -79,17 +73,17 @@ type UserFriendStatus struct {
 	Username   string `json:"username"`
 	AvatarPath string `json:"avatarPath"`
 	Status     string `json:"status"`
-	FriendId   string `json:"friendId"`
-	ChatId     string `json:"chatId"`
+	FriendID   string `json:"friendId"`
+	ChatID     string `json:"chatId"`
 }
 
 type FriendPayload struct {
-	FriendId int    `json:"friendId"`
+	FriendID int    `json:"friendId"`
 	Status   string `json:"status"`
 }
 
 type Friend struct {
-	UserId   int    `json:"id"`
-	FriendId int    `json:"friendId"`
+	UserID   int    `json:"id"`
+	FriendID int    `json:"friendId"`
 	Status   string `json:"status"`
 }

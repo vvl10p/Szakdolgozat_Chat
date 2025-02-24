@@ -17,19 +17,11 @@ import {useChat} from "../../context/ChatContext.tsx";
 import {useSearchParams} from "react-router-dom";
 import MessageBubble from "./MessageBubble.tsx";
 
-interface Message {
-    event: string;
-    chatId: string;
-    sender: string;
-    content: string;
-}
-
 function ChatWindow() {
     const {theme} = useTheme()
-    const {socket, sendMessage} = useChat()
-    const [messages, setMessages] = useState<Message[]>([])
+    const {sendMessage, messages} = useChat()
 
-    const [searchParams, _] = useSearchParams()
+    const [searchParams] = useSearchParams()
     const [inputText, setInputText] = useState<string>('')
     const [, setLineCount] = useState<number>(1)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -111,23 +103,6 @@ function ChatWindow() {
         }
     }
 
-    useEffect(() => {
-        if (socket.current) {
-            const handleMessage = (ev: MessageEvent) => {
-                const incomingMessage = JSON.parse(ev.data)
-                console.log("Message from WebSocket:", incomingMessage)
-
-                setMessages((prevMessages) => [...prevMessages, incomingMessage])
-            }
-
-            socket.current.onmessage = handleMessage
-
-            return () => {
-                socket.current!.onmessage = handleMessage
-            }
-        }
-    }, [socket.current])
-
     const handleFileClick = () => {
         if (inputFileRef.current) {
             inputFileRef.current.click()
@@ -182,9 +157,9 @@ function ChatWindow() {
                         <h3>Chat Messages:</h3>
                         {messages.length > 0 ? (
                             <div>
-                                {messages.filter((message) => message.chatId == searchParams.get("id")).map((message, index) => (
+                                {messages.filter((message) => message.ConversationID == searchParams.get("id")).map((message, index) => (
                                     <div key={index}>
-                                        <MessageBubble key={index} message={message.content}/>
+                                        <MessageBubble key={index} message={message.Content}/>
                                     </div>
                                 ))}
                             </div>

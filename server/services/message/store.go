@@ -3,6 +3,7 @@ package message
 import (
 	"database/sql"
 	"main/types"
+	"main/utils"
 )
 
 type Store struct {
@@ -13,8 +14,8 @@ func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
-func (store *Store) GetMessages() ([]types.Message, error) {
-	rows, err := store.db.Query("SELECT * FROM Message")
+func (store *Store) GetMessages(ChatID string) ([]types.Message, error) {
+	rows, err := store.db.Query("SELECT * FROM (SELECT * FROM Message WHERE ConversationID = ? ORDER BY Timestamp DESC LIMIT 20) sub ORDER BY Timestamp ASC", ChatID, ChatID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,21 +34,31 @@ func (store *Store) GetMessages() ([]types.Message, error) {
 
 func scanRowsIntoMessages(rows *sql.Rows) (*types.Message, error) {
 	message := new(types.Message)
+
 	err := rows.Scan(
 		&message.ID,
-		&message.SenderId,
+		&message.SenderID,
 		&message.Content,
-		&message.CreatedAt,
-		&message.ConversationId,
+		&message.Timestamp,
+		&message.ConversationID,
+		&message.SeenBy,
 	)
 	if err != nil {
 		return nil, err
 	}
+
+	decryptedMessage, err := utils.DecryptMessage(message.Content)
+	if err != nil {
+		return nil, err
+	}
+
+	message.Content = decryptedMessage
+
 	return message, nil
 }
 
-func (store *Store) StoreMessage(message types.Message) error {
-	_, err := store.db.Exec("INSERT INTO Message (SenderID,Content,Timestamp,ConversationID) VALUES (?,?,?,?)", message.SenderId, message.Content, message.CreatedAt, message.ConversationId)
+func (store *Store) DeleteMessages(messageID string) error {
+	_, err := store.db.Exec("DELETE FROM Message WHERE MessageID = ?", messageID)
 	if err != nil {
 		return err
 	}

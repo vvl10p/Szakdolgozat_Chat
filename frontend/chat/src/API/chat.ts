@@ -1,4 +1,4 @@
-/*async function getSessions(token: string) {
+export async function getMessages(ChatID: string, token: string) {
     const requestOptions = {
         method: "GET",
         headers: {
@@ -6,9 +6,9 @@
             "Authorization": `Bearer ${token}`
         },
     }
-    const res = await fetch("http://localhost:5174/getFriendByRecommend", requestOptions)
+    const res = await fetch(`http://localhost:5174/getMessage/id?id=${ChatID}`, requestOptions)
     if (!res.ok) {
         throw new Error
     }
     return await res.json()
-}*/
+}

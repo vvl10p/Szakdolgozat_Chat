@@ -28,7 +28,8 @@ func (h *Handler) GetFriendsForSidebar(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	_, err := auth.ValidateJWT(token)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusUnauthorized, err)
+		return
 	}
 
 	userID, err := auth.DecodeJWT(token)
@@ -51,8 +52,8 @@ func (h *Handler) GetFriendsForSidebar(w http.ResponseWriter, r *http.Request) {
 			Username:   user.Username,
 			AvatarPath: user.AvatarPath,
 			Status:     user.Status,
-			FriendId:   user.FriendId,
-			ChatId:     user.ChatId,
+			FriendID:   user.FriendID,
+			ChatID:     user.ChatID,
 		}
 		res = append(res, basicInfo)
 	}
@@ -69,8 +70,10 @@ func (h *Handler) GetFriendsStatus(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	_, err := auth.ValidateJWT(token)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusUnauthorized, err)
+		return
 	}
+
 	userID, err := auth.DecodeJWT(token)
 	if err != nil {
 		fmt.Println("Failed to decode token:", err)
@@ -92,7 +95,7 @@ func (h *Handler) GetFriendsStatus(w http.ResponseWriter, r *http.Request) {
 			Username:   user.Username,
 			AvatarPath: user.AvatarPath,
 			Status:     user.Status,
-			FriendId:   user.FriendId,
+			FriendID:   user.FriendID,
 		}
 		res = append(res, basicInfo)
 	}
@@ -109,8 +112,10 @@ func (h *Handler) UpdateFriendStatus(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	_, err := auth.ValidateJWT(token)
 	if err != nil {
-		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+		utils.WriteError(w, http.StatusUnauthorized, err)
+		return
 	}
+
 	userID, err := auth.DecodeJWT(token)
 	if err != nil {
 		fmt.Println("Failed to decode token:", err)
@@ -130,7 +135,7 @@ func (h *Handler) UpdateFriendStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.store.UpdateFriendStatus(userID, payload.FriendId, payload.Status)
+	err = h.store.UpdateFriendStatus(userID, payload.FriendID, payload.Status)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 	}

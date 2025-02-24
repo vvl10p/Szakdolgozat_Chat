@@ -4,11 +4,12 @@ import placeHolderAvatar from "./placeholder_avatar.png";
 
 interface ChatCardProps {
     friend?: any
+    lastMessage: string
+    lastMessageTimestamp: string
 }
 
-function ChatCard({friend}: ChatCardProps) {
+function ChatCard({friend, lastMessage, lastMessageTimestamp}: ChatCardProps) {
     const {theme} = useTheme()
-    const formattedTime = new Date().getHours().toString().padStart(2, "0") + ":" + new Date().getMinutes().toString().padStart(2, "0");
 
     return (
         <>
@@ -26,10 +27,10 @@ function ChatCard({friend}: ChatCardProps) {
                     </div>
                 </div>
                 <div className={theme === "dark" ? "chatCardMessageContainerDark" : "chatCardMessageContainer"}>
-                    <span>This is a test message</span>
+                    <span>{lastMessage}</span>
                 </div>
                 <div className={theme === "dark" ? "chatCardTimeContainerDark" : "chatCardTimeContainer"}>
-                    <span>{formattedTime}</span>
+                    <span>{lastMessageTimestamp}</span>
                 </div>
             </div>
         </>

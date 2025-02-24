@@ -1,11 +1,18 @@
 package utils
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/go-playground/validator/v10"
+	"io"
 	"net/http"
 )
+
+const messageKey = "supersecretmessagekeyforcipher12"
 
 /*
 const MAX_FILE_SIZE = 5*1024*1024
@@ -56,4 +63,65 @@ func WriteError(w http.ResponseWriter, status int, err error) {
 	if err != nil {
 		return
 	}
+}
+
+func EncryptMessage(plainMessage string) (string, error) {
+	key := []byte(messageKey)
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+
+	nonce := make([]byte, 12)
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		return "", err
+	}
+
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	ciphertext := aesgcm.Seal(nil, nonce, []byte(plainMessage), nil)
+	ciphertext = append(nonce, ciphertext...)
+	
+	return hex.EncodeToString(ciphertext), nil
+}
+
+func DecryptMessage(encryptedMessage string) (string, error) {
+	key := []byte(messageKey)
+
+	if len(encryptedMessage) < 24 {
+		return "", fmt.Errorf("encrypted message is too short")
+	}
+
+	cipherText, err := hex.DecodeString(encryptedMessage[24:])
+	if err != nil {
+		return "", fmt.Errorf("failed to decode ciphertext: %v", err)
+	}
+
+	nonce, err := hex.DecodeString(encryptedMessage[0:24])
+	if len(nonce) != 12 {
+		return "", fmt.Errorf("incorrect nonce length, expected 12 bytes, got %d", len(nonce))
+	}
+	if err != nil {
+		return "", err
+	}
+
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", fmt.Errorf("failed to create AES cipher: %v", err)
+	}
+
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", fmt.Errorf("failed to create GCM: %v", err)
+	}
+
+	plaintext, err := aesgcm.Open(nil, nonce, cipherText, nil)
+	if err != nil {
+		return "", fmt.Errorf("decryption failed: %v", err)
+	}
+
+	return string(plaintext), nil
 }
