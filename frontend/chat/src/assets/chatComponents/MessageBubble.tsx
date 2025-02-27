@@ -9,7 +9,7 @@ function MessageBubble(message: MessageBubbleProps) {
         <>
             <div className={"messageContainer"}>
                 <div className={"messageBubble"}>
-                    <span className={"messageText"}>{message.message}</span>
+                    <pre className={"messageText"}>{message.message}</pre>
                 </div>
             </div>
         </>

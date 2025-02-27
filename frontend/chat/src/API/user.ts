@@ -10,28 +10,30 @@ export async function AvatarUpload(token: string, avatarPath: string) {
         })
     }
     const res = await fetch("http://localhost:5174/avatar_upload", requestOptions)
-    if (!res.ok) {
+    const data = await res.json().catch(() => null)
+    if (!res.ok || data.avatarPath == "") {
         throw new Error
     }
-    return await res.json()
+    return await {data, status: res.status}
 }
 
-export async function ChangePassword(token: string, newPassword: string) {
+export async function ChangePassword(token: string, newPassword: string, oldPassword: string) {
     const requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-            newPassword
+            oldPassword,
+            newPassword,
         })
     }
-    const res = await fetch("http://localhost:5174/change_password", requestOptions)
+    const res = await fetch("http://localhost:5174/user/update_password", requestOptions)
     if (!res.ok) {
         throw new Error
     }
-    return await res.json()
+    return await res.status
 }
 
 export async function GetUserData(token: string) {

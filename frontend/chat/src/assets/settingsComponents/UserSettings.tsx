@@ -1,21 +1,45 @@
 import {useTheme} from "../../context/ThemeContext.tsx";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Box, Modal} from "@mui/material";
 import "./UserSettings.css";
 import {useNavigate} from "react-router-dom";
-import {AvatarUpload as AvatarUploadAPI} from "../../API/user.ts";
+import {AvatarUpload as AvatarUploadAPI, ChangePassword as ChangePasswordAPI} from "../../API/user.ts";
 import avatarPlaceholder from "./avatarPlaceholder.png";
+import {useUser} from "../../context/UserContext.tsx";
 
 function UserSettings() {
     const {theme} = useTheme()
     const navigate = useNavigate()
+    const {user, setUser} = useUser()
 
     const MAX_FILE_SIZE = 5 * 1024 * 1024
 
     const [errorMessage, setErrorMessage] = useState<string>("")
-
-    const [selectedImage, setSelectedImage] = useState<string | null>(null)
+    const [selectedImage, setSelectedImage] = useState<string>("")
+    const [imageMessageHidden, setImageMessageHidden] = useState<boolean>(true)
     const inputFileRef = useRef<HTMLInputElement | null>(null)
+
+    const [oldPassword, setOldPassword] = useState<string>("")
+    const [newPassword, setNewPassword] = useState<string>("")
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>("")
+    const [passwordError, setPasswordError] = useState<string>("")
+    const [passwordErrorHidden, setPasswordErrorHidden] = useState<boolean>(true)
+
+    const [seconds, setSeconds] = useState<number>(10)
+    const [countdownStarted, setCountdownStarted] = useState<boolean>(false)
+
+    const startCountdown = () => {
+        setCountdownStarted(true)
+    }
+
+    useEffect(() => {
+       if (!countdownStarted || seconds === 0) return
+        setPasswordError(seconds > 1 ? `Password changed successfully, you will be logged out in ${seconds} seconds` : `Password changed successfully, you will be logged out in ${seconds} second`)
+        const intervalId = setInterval(() => {
+            setSeconds((prev) => prev - 1)
+        },1000)
+        return () => clearInterval(intervalId)
+    },[countdownStarted,seconds])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
@@ -43,14 +67,81 @@ function UserSettings() {
     const token: string | null = localStorage.getItem("jwt")
 
     async function handleAvatarUploadRequest() {
-        if (token && selectedImage) {
+        if (token && selectedImage !== "") {
             try {
                 const res = await AvatarUploadAPI(token, selectedImage)
-                return res.data;
+                if (res.status === 200 && res.data) {
+                    setErrorMessage("Avatar successfully uploaded")
+                    setImageMessageHidden(false)
+                    if (!user) {
+                        return
+                    }
+                    const updatedUser = {...user, avatarPath: res.data}
+                    setUser(updatedUser)
+                    localStorage.setItem("USER", JSON.stringify(updatedUser))
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
+                    setUser((prev) => prev ? {...prev} : prev)
+                }
             } catch (err) {
+                setErrorMessage("Avatar upload failed")
+                setImageMessageHidden(false)
                 return
             }
         } else return
+    }
+
+    function timeout(delay: number) {
+        return new Promise(res => setTimeout(res, delay));
+    }
+
+    async function handlePasswordChange() {
+        if (!token) {
+            return
+        }
+        if (newPassword === "") {
+            setPasswordError("New Password cannot be empty")
+            setPasswordErrorHidden(false)
+            return
+        } else if (newPassword.length < 8) {
+            setPasswordError("Password must be at least 8 characters")
+            setPasswordErrorHidden(false)
+            return
+        } else if (oldPassword === newPassword) {
+            setPasswordError("New Password cannot be the same as the Old Password")
+            setPasswordErrorHidden(false)
+            return
+        } else if (newPassword !== newPasswordConfirm) {
+            setPasswordError("Confirm Passwords do not match")
+            setPasswordErrorHidden(false)
+            return
+        } else if (oldPassword === "") {
+            setPasswordError("Old Password cannot be empty")
+            setPasswordErrorHidden(false)
+            return
+        } else {
+            setPasswordError("")
+            setPasswordErrorHidden(true)
+            try {
+                const res = await ChangePasswordAPI(token, newPassword, oldPassword)
+                console.log(res)
+                if (res == 200) {
+                    startCountdown()
+                    setPasswordErrorHidden(false)
+                    setTimeout(async () => {
+                        await timeout(10000)
+                        handleLogOut()
+                    }, 0)
+                } else {
+                    setPasswordError(res.toString() || "An error occurred")
+                    setPasswordErrorHidden(false)
+                }
+            } catch (err) {
+                console.error("Error changing password:", err)
+                setPasswordError("Something went wrong, please try again.")
+                setPasswordErrorHidden(false)
+            }
+        }
     }
 
     const handleLogOut = () => {
@@ -122,7 +213,7 @@ function UserSettings() {
                                     onClick={handleAvatarUploadRequest}>Change avatar
                                 </button>
                             </div>
-                            <span>{errorMessage}</span>
+                            <span hidden={imageMessageHidden}>{errorMessage}</span>
                         </div>
                     </Box>
                 </Modal>
@@ -139,12 +230,18 @@ function UserSettings() {
                 >
                     <Box sx={style}>
                         <div>
+                            <label>Old Password</label>
+                            <input type={"password"} onChange={(e) => setOldPassword(e.target.value)}></input>
                             <label>New password</label>
-                            <input type={"password"}></input>
+                            <input type={"password"} onChange={(e) => {
+                                setNewPassword(e.target.value)
+                            }}></input>
                             <label>Confirm new password</label>
-                            <input type={"password"}></input>
-                            <button>Change password</button>
-                            <p>Error message</p>
+                            <input type={"password"} onChange={(e) => {
+                                setNewPasswordConfirm(e.target.value)
+                            }}></input>
+                            <button onClick={handlePasswordChange}>Change password</button>
+                            <p hidden={passwordErrorHidden}>{passwordError}</p>
                         </div>
                     </Box>
                 </Modal>

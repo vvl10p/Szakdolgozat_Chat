@@ -83,10 +83,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("User %s connected to WebSocket\n", userID)
-
 	conn.SetCloseHandler(func(code int, text string) error {
-		fmt.Printf("User %s disconnected from WebSocket: %d - %s\n", userID, code, text)
 		return nil
 	})
 
@@ -104,8 +101,6 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		room.Connections = append(room.Connections, conn)
 		room.mu.Unlock()
 		chatRoomsMu.Unlock()
-
-		fmt.Printf("User %s joined Chat Room %s\n", userID, chatID)
 	}
 
 	store.listenForMessages(conn, chatIDs, userID)
@@ -129,8 +124,6 @@ func broadcastMessage(room *ChatRoom, message *types.Message, userID string) {
 			log.Println("Write error:", err)
 		}
 	}
-
-	fmt.Printf("User %s sent a message to Chat Room %s: %s\n", userID, room.ID, message.Content)
 }
 
 func removeConnectionFromRoom(room *ChatRoom, conn *websocket.Conn) {
@@ -151,12 +144,9 @@ func removeConnectionFromRoom(room *ChatRoom, conn *websocket.Conn) {
 			chatRoomsMu.Lock()
 			if len(chatRooms[chatID].Connections) == 0 {
 				delete(chatRooms, chatID)
-				fmt.Printf("Chat Room %s removed (no active users left)\n", chatID)
 			}
 			chatRoomsMu.Unlock()
 		}(room.ID)
-	} else {
-		fmt.Printf("User left Chat Room %s. Active connections: %d\n", room.ID, len(room.Connections))
 	}
 }
 
@@ -175,11 +165,8 @@ func (store *Store) listenForMessages(conn *websocket.Conn, chatIDs []string, us
 	for {
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
-			fmt.Printf("User %s disconnected due to error: %v\n", userID, err)
 			break
 		}
-
-		fmt.Printf("User %s sent message: %s\n", userID, string(msg))
 
 		var message Message
 		if err := json.Unmarshal(msg, &message); err != nil {

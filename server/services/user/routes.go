@@ -23,6 +23,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/avatar_upload", h.handleAvatarUpload).Methods("POST")
 	router.HandleFunc("/user/data", h.handleGetUserData).Methods("GET")
+	router.HandleFunc("/user/update_password", h.handleUpdatePassword).Methods("PUT")
 }
 
 func (h *Handler) handleGetUsers(w http.ResponseWriter, r *http.Request) {
@@ -115,7 +116,7 @@ func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.store.UploadAvatar(u.ID, payload.AvatarPath)
+	_, err = h.store.UploadAvatar(u.ID, payload.AvatarPath)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -193,4 +194,54 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.WriteJSON(w, http.StatusCreated, nil)
+}
+
+func (h *Handler) handleUpdatePassword(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	userID, err := auth.DecodeJWT(token)
+
+	if _, err := auth.ValidateJWT(r.Header.Get("Authorization")); err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+	}
+
+	if err != nil {
+		fmt.Println("Failed to decode token:", err)
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid token"))
+		return
+	}
+
+	var payload types.UpdatePasswordPayload
+	if err := utils.ParseJSON(r, &payload); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := utils.Validate.Struct(payload); err != nil {
+		errors := err.(validator.ValidationErrors)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
+		return
+	}
+
+	u, err := h.store.GetUserById(userID)
+	if err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("user not found"))
+		return
+	}
+
+	if !auth.ComparePasswords(u.Password, []byte(payload.OldPassword)) {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("current password does not match"))
+		return
+	}
+
+	if auth.ComparePasswords(u.Password, []byte(payload.NewPassword)) {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("new password is the same as old password"))
+		return
+	}
+
+	hashedPassword, err := auth.HashPassword(payload.NewPassword)
+
+	err = h.store.UpdatePassword(userID, hashedPassword)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+	}
 }

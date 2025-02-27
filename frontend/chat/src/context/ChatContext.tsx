@@ -49,11 +49,16 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
 
     const handleMessage = (ev: MessageEvent) => {
         const incomingMessage = JSON.parse(ev.data)
-        console.log("Message from WebSocket:", incomingMessage)
-        setMessages((prevMessages) => [...prevMessages, { ...incomingMessage }])
+        if (incomingMessage.Content !== "") {
+            if (/^[\n\r\t]+$/.test(incomingMessage.Content.trim())) {
+                return
+            }
+            console.log("Message from WebSocket:", incomingMessage)
+            setMessages((prevMessages) => [...prevMessages, {...incomingMessage}])
+        }
     }
 
-    useEffect( () => {
+    useEffect(() => {
         const fetchMessages = async () => {
             console.log(searchParams.get("id"))
             try {
@@ -70,8 +75,7 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
                 }))
                 setMessages(messagesToDisplay)
                 console.log(messages)
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error)
             }
         }

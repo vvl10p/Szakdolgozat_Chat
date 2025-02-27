@@ -26,6 +26,34 @@ function ChatWindow() {
     const [, setLineCount] = useState<number>(1)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+    const sanitizeInput = (text: string) :string => {
+        const sanitizedText = text.replace(/^[\n\r\t]+|[\n\r\t]+$/g, "")
+        return sanitizedText
+    }
+
+    const reformatTextarea = ()=> {
+        if (textareaRef.current) {
+            setInputText("")
+            textareaRef.current.value = ""
+            setLineCount(1)
+            textareaRef.current.style.height = `48px`
+            textareaRef.current.style.transform = `translateY(0)`
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && textareaRef.current) {
+            if (!e.shiftKey) {
+                e.preventDefault()
+                const sanitizedText = sanitizeInput(inputText)
+                if (sanitizedText !== "") {
+                    sendMessage(sanitizedText, searchParams.get("id")!)
+                }
+                reformatTextarea()
+            }
+        }
+    }
+
     const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
@@ -51,7 +79,6 @@ function ChatWindow() {
             const offset = Math.min((currentLineCount - 1) * 12, 3 * 8)
             textareaRef.current.style.transform = `translateY(-${offset}px)`
         }
-
     }
 
     const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -154,7 +181,6 @@ function ChatWindow() {
                     <div
                         className={theme === "dark" ? "chatWindowMessageHistoryContainerDark" : "chatWindowMessageHistoryContainer"}
                         ref={chatContainerRef}>
-                        <h3>Chat Messages:</h3>
                         {messages.length > 0 ? (
                             <div>
                                 {messages.filter((message) => message.ConversationID == searchParams.get("id")).map((message, index) => (
@@ -223,11 +249,17 @@ function ChatWindow() {
                                 <textarea
                                     className={theme === "dark" ? "chatWindowControlInputFieldDark" : "chatWindowControlInputField"}
                                     onChange={handleTextChange} defaultValue={inputText}
-                                    placeholder={"type your message here!"} rows={1} ref={textareaRef}>
+                                    placeholder={"type your message here!"} rows={1} ref={textareaRef} onKeyDown={(ev) => handleKeyDown(ev)}>
                                 </textarea>
                             </div>
                             <div className={theme === "dark" ? "chatWindowControlSendDark" : "chatWindowControlSend"}
-                                 onClick={() => sendMessage(inputText, searchParams.get("id")!)}>
+                                 onClick={() => {
+                                     const sanitizedText = sanitizeInput(inputText)
+                                     if (sanitizedText !== "") {
+                                         sendMessage(sanitizedText, searchParams.get("id")!)
+                                         reformatTextarea()
+                                     } else reformatTextarea()
+                                 }}>
                                 <button
                                     className={theme === "dark" ? "chatWindowControlButtonDark" : "chatWindowControlButton"}>
                                     <SendIcon/>

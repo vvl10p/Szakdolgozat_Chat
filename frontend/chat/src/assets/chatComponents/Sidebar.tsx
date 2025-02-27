@@ -68,10 +68,16 @@ export default function Sidebar() {
             setFriends(data)
             setLastMessages(() => {
                 const temp = new Map<string, LastMessage>()
-                data.map((friend: SideBarPreview) => {
-                    temp.set(friend.chatId, {LastMessage: friend.lastMessage, LastMessageTimeStamp: friend.lastMessageTimeStamp})
-                })
-                return temp
+                if (data) {
+                    data.map((friend: SideBarPreview) => {
+                        temp.set(friend.chatId, {
+                            LastMessage: friend.lastMessage,
+                            LastMessageTimeStamp: friend.lastMessageTimeStamp
+                        })
+                    })
+                    return temp
+                }
+
             })
         })()
     }, [])
@@ -83,7 +89,8 @@ export default function Sidebar() {
                     <div key={index} className={"sidebarContent"} tabIndex={1} onClick={() => {
                         navigate(`${location.pathname}?id=${friend.chatId}`)
                     }}>
-                        <ChatCard friend={friend} lastMessage={lastMessages!.get(friend.chatId)!.LastMessage} lastMessageTimestamp={lastMessages!.get(friend.chatId)!.LastMessageTimeStamp}/>
+                        <ChatCard friend={friend} lastMessage={lastMessages!.get(friend.chatId)!.LastMessage}
+                                  lastMessageTimestamp={lastMessages!.get(friend.chatId)!.LastMessageTimeStamp}/>
                     </div>
                 ))}
             </>

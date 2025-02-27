@@ -8,9 +8,10 @@ type UserStore interface {
 	GetUserByUsername(username string) (*User, error)
 	GetUserById(userID int) (*User, error)
 	CreateUser(User) error
-	UploadAvatar(userID int, avatarString string) error
+	UploadAvatar(userID int, avatarString string) (avatarPath string, err error)
 	GetUserData(userID int) (username string, avatarPath string, err error)
 	GetUsers(userID int, searchQuery string) ([]UserBasicInfo, error)
+	UpdatePassword(userID int, password string) error
 }
 
 type MessageStore interface {
@@ -86,4 +87,9 @@ type Friend struct {
 	UserID   int    `json:"id"`
 	FriendID int    `json:"friendId"`
 	Status   string `json:"status"`
+}
+
+type UpdatePasswordPayload struct {
+	OldPassword string `json:"oldPassword" validate:"required,min=8,max=80"`
+	NewPassword string `json:"newPassword" validate:"required,min=8,max=80"`
 }

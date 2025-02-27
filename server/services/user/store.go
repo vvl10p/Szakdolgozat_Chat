@@ -70,12 +70,12 @@ func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
-func (store *Store) UploadAvatar(id int, pathString string) error {
-	_, err := store.db.Exec("UPDATE User SET AvatarPath = ? WHERE UserID = ?", pathString, id)
+func (store *Store) UploadAvatar(id int, pathString string) (avatarPath string, err error) {
+	_, err = store.db.Exec("UPDATE User SET AvatarPath = ? WHERE UserID = ?", pathString, id)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return pathString, nil
 }
 
 func (store *Store) GetUserById(id int) (*types.User, error) {
@@ -125,6 +125,14 @@ func (store *Store) GetUserByUsername(username string) (*types.User, error) {
 	}
 
 	return u, nil
+}
+
+func (store *Store) UpdatePassword(userId int, password string) error {
+	_, err := store.db.Exec("UPDATE User SET Password = ? WHERE UserID = ?", password, userId)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func scanRowIntoUser(rows *sql.Rows) (*types.User, error) {
