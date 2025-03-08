@@ -45,6 +45,7 @@ type Message struct {
 	ChatID  string `json:"ChatID"`
 	Sender  string `json:"Sender"`
 	Content string `json:"Content"`
+	File    []byte `json:"File"`
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
@@ -113,7 +114,7 @@ func initStorage(db *sql.DB) {
 	}
 }
 
-func broadcastMessage(room *ChatRoom, message *types.Message, userID string) {
+func broadcastMessage(room *ChatRoom, message *types.Message) {
 	room.mu.Lock()
 	defer room.mu.Unlock()
 
@@ -175,14 +176,33 @@ func (store *Store) listenForMessages(conn *websocket.Conn, chatIDs []string, us
 		}
 
 		if room, exists := chatRooms[message.ChatID]; exists {
-			msgtosend, err := saveMessage(store, message)
-			broadcastMessage(room, msgtosend, userID)
-			if err != nil {
-				log.Println("Error saving message:", err)
-				return
+			if message.Event == "FileUpload" {
+
+				tempContent, err := utils.UploadFile(message.File, message.Content)
+				if err != nil {
+					log.Println("Upload error:", err)
+				}
+
+				message.Content = tempContent
+
+				msgtosend, err := saveMessage(store, message)
+				if err != nil {
+					log.Println("Save error:", err)
+				}
+				broadcastMessage(room, msgtosend)
+			} else {
+				msgtosend, err := saveMessage(store, message)
+				if err != nil {
+					log.Println("Save error:", err)
+				}
+				broadcastMessage(room, msgtosend)
+				if err != nil {
+					log.Println("Error saving message:", err)
+					return
+				}
 			}
 		} else {
-			fmt.Printf("User %s tried to send a message to a non-existent Chat Room %s\n", userID, message.ChatID)
+			log.Printf("User %s tried to send a message to a non-existent Chat Room %s\n", userID, message.ChatID)
 		}
 	}
 }

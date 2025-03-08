@@ -14,30 +14,6 @@ import (
 
 const messageKey = "supersecretmessagekeyforcipher12"
 
-/*
-const MAX_FILE_SIZE = 5*1024*1024
-
-	func UploadFile(file io.Reader, file-bucket-szakdolgozat-vvl10p, fileName string) error {
-		cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-north-1"))
-		if err != nil {
-			return fmt.Errorf("unable to load AWS config: %v", err)
-		}
-
-		s3Client := s3.NewFromConfig(cfg)
-		_, err = s3Client.PutObject(context.TODO(), &s3.PutObjectInput{
-	        Bucket: aws.String(bucketName),
-	        Key:    aws.String(fileName),
-	        Body:   file,
-	  })
-		if err != nil {
-	      return fmt.Errorf("unable to upload file to S3: %v", err)
-	  }
-
-	  fmt.Printf("Successfully uploaded %s to S3 bucket %s\n", fileName, bucketName)
-	  return nil
-	}
-*/
-
 var Validate = validator.New()
 
 func ParseJSON(r *http.Request, payload any) error {
@@ -84,7 +60,7 @@ func EncryptMessage(plainMessage string) (string, error) {
 
 	ciphertext := aesgcm.Seal(nil, nonce, []byte(plainMessage), nil)
 	ciphertext = append(nonce, ciphertext...)
-	
+
 	return hex.EncodeToString(ciphertext), nil
 }
 

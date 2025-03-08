@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {useUser} from "../../context/UserContext.tsx";
 import {FriendsForSidebar as FriendsForSidebarAPI} from "../../API/friendlist.ts";
 import {useChat} from "../../context/ChatContext.tsx";
+import {getMessages} from "../../API/chat.ts";
 
 type SideBarPreview = {
     id: string,
@@ -22,6 +23,15 @@ type SideBarPreview = {
     chatId: string,
 }
 
+type ReceivedMessage = {
+    MsgID: string
+    ConversationID: string
+    Content: string
+    Sender: string
+    Timestamp: string
+    SeenBy: string
+}
+
 type LastMessage = {
     LastMessage: string,
     LastMessageTimeStamp: string,
@@ -29,12 +39,21 @@ type LastMessage = {
 
 export default function Sidebar() {
     const {theme} = useTheme()
-    const {messages} = useChat()
+    const {messages, setMessages} = useChat()
     const [friends, setFriends] = useState<SideBarPreview[]>([])
     const [lastMessages, setLastMessages] = useState<Map<string, LastMessage>>()
 
 
     const navigate = useNavigate()
+
+    const formatTime = (time: string) => {
+        const date = new Date(time)
+        const hours = date.getHours().toString().padStart(2, '0')
+        const minutes = date.getMinutes().toString().padStart(2, '0')
+        console.log(time)
+        console.log(`${hours}:${minutes}`)
+        return `${hours}:${minutes}`
+    }
 
     async function handleFriends() {
         const token = localStorage.getItem("jwt")
@@ -49,53 +68,66 @@ export default function Sidebar() {
     }
 
     useEffect(() => {
-        const tempLastMessage = messages[messages.length - 1]
-        if (!tempLastMessage) return
+        if (!messages) return
+        const temp = messages.at(-1)
+        if (!temp) return
+
         setLastMessages((prevState) => {
-                (prevState ?? new Map<string, LastMessage>()).set(tempLastMessage.ConversationID, {
-                        LastMessage: tempLastMessage.Content,
-                        LastMessageTimeStamp: tempLastMessage.Timestamp
-                    }
-                )
-                return prevState
-            }
-        )
-    }, [messages]);
+            const newMap = new Map(prevState ?? new Map<string, LastMessage>())
+            newMap.set(String(temp.ConversationID), {
+                LastMessage: temp.Content,
+                LastMessageTimeStamp: formatTime(temp.Timestamp),
+            })
+            return newMap
+        })
+    }, [messages])
 
     useEffect(() => {
-        (async () => {
-            const data = await handleFriends()
-            setFriends(data)
-            setLastMessages(() => {
-                const temp = new Map<string, LastMessage>()
-                if (data) {
-                    data.map((friend: SideBarPreview) => {
-                        temp.set(friend.chatId, {
-                            LastMessage: friend.lastMessage,
-                            LastMessageTimeStamp: friend.lastMessageTimeStamp
+        const fetchMessagesForFriends = async () => {
+            try {
+                const data:SideBarPreview[] = await handleFriends()
+                setFriends(data)
+
+                const allMessages: ReceivedMessage[] = []
+                const allLastMessages: Map<string, LastMessage> = new Map()
+
+                await Promise.all(
+                    data.map(async (friend) => {
+                        const msgs = await getMessages(friend.chatId, localStorage.getItem("jwt")!)
+
+                        if (!msgs) {
+                            return
+                        }
+
+                        const messagesToDisplay: ReceivedMessage[] = msgs.map((msg:ReceivedMessage) => ({
+                            MsgId: msg.MsgID,
+                            Sender: msg.Sender,
+                            Content: msg.Content,
+                            Timestamp: msg.Timestamp,
+                            ConversationID: msg.ConversationID,
+                            SeenBy: msg.SeenBy,
+                        }))
+
+                        allMessages.push(...messagesToDisplay)
+                        const temp = messagesToDisplay.at(-1)
+                        if (!temp) return
+                        allLastMessages.set(friend.chatId, {
+                            LastMessage: temp.Content,
+                            LastMessageTimeStamp: formatTime(temp.Timestamp),
                         })
                     })
-                    return temp
-                }
+                )
 
-            })
-        })()
+                setMessages(allMessages)
+
+                setLastMessages(allLastMessages)
+
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchMessagesForFriends()
     }, [])
-
-    function mapChats() {
-        return (
-            <>
-                {friends.map((friend, index) => (
-                    <div key={index} className={"sidebarContent"} tabIndex={1} onClick={() => {
-                        navigate(`${location.pathname}?id=${friend.chatId}`)
-                    }}>
-                        <ChatCard friend={friend} lastMessage={lastMessages!.get(friend.chatId)!.LastMessage}
-                                  lastMessageTimestamp={lastMessages!.get(friend.chatId)!.LastMessageTimeStamp}/>
-                    </div>
-                ))}
-            </>
-        )
-    }
 
     const {user} = useUser()
 
@@ -126,7 +158,16 @@ export default function Sidebar() {
                     <span>Messages</span>
                 </div>
                 <div className={theme === "dark" ? "sidebarContentContainerDark" : "sidebarContentContainer"}>
-                    {lastMessages && mapChats()}
+                    {
+                        lastMessages && lastMessages.size > 0 && friends && friends.map((friend, index) => {
+                            return (
+                            <div key={index} className={"sidebarContent"} tabIndex={1} onClick={() => {
+                                navigate(`${location.pathname}?id=${friend.chatId}`)
+                            }}>
+                                <ChatCard friend={friend} lastMessage={lastMessages!.get(friend.chatId)!.LastMessage}
+                                          lastMessageTimestamp={lastMessages!.get(friend.chatId)!.LastMessageTimeStamp}/>
+                            </div>
+                        )})}
                 </div>
                 <div className={theme === "dark" ? "sidebarFooterDark" : "sidebarFooter"}>
                     <div className={theme === "dark" ? "sidebarUserContainerDark" : "sidebarUserContainer"}>

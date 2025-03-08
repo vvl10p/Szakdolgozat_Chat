@@ -1,14 +1,13 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {useUser} from "./UserContext.tsx";
-import {getMessages} from "../API/chat.ts";
-import {useSearchParams} from "react-router-dom";
+//import {getMessages} from "../API/chat.ts";
+//import {useSearchParams} from "react-router-dom";
 
 interface ChatContext {
     socket: React.RefObject<WebSocket | null>
-    sessions: string[]
-    setSessions: React.Dispatch<React.SetStateAction<string[]>>
-    sendMessage: (message: string, chatId: string) => void
+    sendMessage: (message: string, chatId: string, file: ArrayBuffer[], fileData: string[]) => void
     messages: ReceivedMessage[]
+    setMessages: (messages: ReceivedMessage[]) => void
 }
 
 type Message = {
@@ -16,6 +15,7 @@ type Message = {
     ChatID: string
     Sender: string
     Content: string
+    File: number[]
 }
 
 type ReceivedMessage = {
@@ -38,10 +38,9 @@ export const useChat = () => {
 }
 
 export const ChatProvider = ({children}: { children: React.ReactNode }) => {
-    const [sessions, setSessions] = useState<string[]>([])
     const socket = useRef<WebSocket | null>(null)
     const {user} = useUser()
-    const [searchParams] = useSearchParams()
+    //const [searchParams] = useSearchParams()
     const [messages, setMessages] = useState<ReceivedMessage[]>([])
 
     const reconnectAttempts = useRef(0)
@@ -58,9 +57,8 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         const fetchMessages = async () => {
-            console.log(searchParams.get("id"))
             try {
                 const msgs = await getMessages(searchParams.get("id")!, localStorage.getItem("jwt")!)
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -74,13 +72,13 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
                     SeenBy: msg.SeenBy,
                 }))
                 setMessages(messagesToDisplay)
-                console.log(messages)
+                console.log("messages loaded", messages)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchMessages()
-    }, [searchParams]);
+    }, [searchParams])*/
 
     useEffect(() => {
         if (!user) {
@@ -122,10 +120,23 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
         }
     }, [user])
 
-    const sendMessage = (message: string, chatId: string) => {
+    const sendMessage = (message: string, chatId: string, file:ArrayBuffer[], fileData: string[]) => {
         if (socket.current?.readyState !== WebSocket.OPEN) {
             console.warn("WebSocket not open. Message not sent.")
             return
+        }
+
+        if (file.length > 0) {
+            file.map((file: ArrayBuffer, index: number)=> {
+                const msg: Message = {
+                    Event: "FileUpload",
+                    ChatID: chatId,
+                    Sender: String(user?.id),
+                    Content: fileData[index],
+                    File: Array.from(new Uint8Array(file)),
+                }
+                socket.current?.send(JSON.stringify(msg))
+            })
         }
 
         const msg: Message = {
@@ -133,6 +144,7 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
             ChatID: chatId,
             Sender: String(user?.id),
             Content: message,
+            File: [],
         }
 
         socket.current?.send(JSON.stringify(msg))
@@ -167,7 +179,7 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
     }
 
     return (
-        <ChatContext.Provider value={{socket, sessions, setSessions, sendMessage, messages}}>
+        <ChatContext.Provider value={{socket, sendMessage, messages, setMessages}}>
             {children}
         </ChatContext.Provider>
     )

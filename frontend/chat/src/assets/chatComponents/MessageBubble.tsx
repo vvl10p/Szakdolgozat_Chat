@@ -1,7 +1,7 @@
 import "./MessageBubble.css"
 
 interface MessageBubbleProps {
-    message: string;
+    message: string | JSX.Element;
 }
 
 function MessageBubble(message: MessageBubbleProps) {
@@ -9,7 +9,11 @@ function MessageBubble(message: MessageBubbleProps) {
         <>
             <div className={"messageContainer"}>
                 <div className={"messageBubble"}>
-                    <pre className={"messageText"}>{message.message}</pre>
+                    {typeof message.message === "string" ? (
+                        <pre className={"messageText"}>{message.message}</pre>
+                    ) : (
+                        message.message
+                    )}
                 </div>
             </div>
         </>

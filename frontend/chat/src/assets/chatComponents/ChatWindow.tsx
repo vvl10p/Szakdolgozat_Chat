@@ -2,8 +2,6 @@ import "./ChatWindow.css"
 import {useEffect, useRef, useState} from "react";
 import {useTheme} from "../../context/ThemeContext.tsx";
 import SendIcon from '@mui/icons-material/Send';
-import ImageIcon from '@mui/icons-material/Image';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -13,9 +11,13 @@ import BackupTableIcon from '@mui/icons-material/BackupTable';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import AddIcon from '@mui/icons-material/Add';
 import {useChat} from "../../context/ChatContext.tsx";
 import {useSearchParams} from "react-router-dom";
 import MessageBubble from "./MessageBubble.tsx";
+import {Box, Modal} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import DownloadIcon from '@mui/icons-material/Download';
 
 function ChatWindow() {
     const {theme} = useTheme()
@@ -27,7 +29,10 @@ function ChatWindow() {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     const sanitizeInput = (text: string) :string => {
-        const sanitizedText = text.replace(/^[\n\r\t]+|[\n\r\t]+$/g, "")
+        const sanitizedText = text.replace(/^[\s\n\r\t]+|[\s\n\r\t]+$/g, "")
+        if (sanitizedText == "") {
+            return ''
+        }
         return sanitizedText
     }
 
@@ -47,9 +52,12 @@ function ChatWindow() {
                 e.preventDefault()
                 const sanitizedText = sanitizeInput(inputText)
                 if (sanitizedText !== "") {
-                    sendMessage(sanitizedText, searchParams.get("id")!)
+                    sendMessage(sanitizedText, searchParams.get("id")!, files,fileData)
                 }
                 reformatTextarea()
+                setFiles([])
+                setFileData([])
+                setFilePreviews([])
             }
         }
     }
@@ -90,59 +98,53 @@ function ChatWindow() {
         adjustHeight()
     }, [])
 
-    const [image, setImage] = useState<string | null>(null)
-    const inputImageRef = useRef<HTMLInputElement | null>(null)
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setImage(reader.result as string)
-            }
-            reader.readAsDataURL(file)
-        }
-    }
+    const [files, setFiles] = useState<ArrayBuffer[]>([])
+    const [filePreviews, setFilePreviews] = useState<{ preview: React.ReactNode; name: string }[]>([])
+    const [fileData, setFileData] = useState<string[]>([])
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
-    const handleImageClick = () => {
-        if (inputImageRef.current) {
-            inputImageRef.current.click()
-        }
-    }
-
-    const handleImageRemove = () => {
-        setImage(null)
-    }
-
-    const [file, setFile] = useState<string | null>(null)
-    const [fileName, setFileName] = useState<string | null>(null)
-    const [filePreview, setFilePreview] = useState<React.ReactNode | null>(null)
-    const inputFileRef = useRef<HTMLInputElement | null>(null)
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (file) {
-            const reader = new FileReader
-            reader.onloadend = () => {
-                setFile(reader.result as string)
-                setFileName(file.name)
-                setFilePreview(getFilePlaceholderPreview(file))
+        const selectedFiles = event.target.files
+        if (!selectedFiles) return
+
+        Array.from(selectedFiles).forEach((file) => {
+            const reader = new FileReader()
+
+            reader.onload = (e) => {
+                if (e.target?.result) {
+                    const bytes = e.target.result as ArrayBuffer
+                    setFiles((prev) => [...prev, bytes])
+                    const fileData = JSON.stringify({ name: file.name, type: file.type })
+                    setFileData((prev) => [...prev, fileData])
+                    console.log(fileData)
+
+                    if (file.type.startsWith("image")) {
+                        const blob = new Blob([bytes], { type: file.type })
+                        const url = URL.createObjectURL(blob)
+                        setFilePreviews((prev) => [
+                            ...prev,
+                            { preview: <img className={"chatWindowControlInputPreviewImage"} src={url} alt={file.name}/>, name: file.name },
+                        ])
+                    } else {
+                        setFilePreviews((prev) => [...prev, { preview: <div>{getFilePlaceholderPreview(file.name)}</div>, name: file.name }])
+                    }
+                }
             }
-            reader.readAsDataURL(file)
-        }
+            reader.readAsArrayBuffer(file)
+        })
     }
 
     const handleFileClick = () => {
-        if (inputFileRef.current) {
-            inputFileRef.current.click()
-        }
+        inputRef.current?.click()
     }
 
-    const handleFileRemove = () => {
-        setFile(null)
-        setFileName(null)
+    const handleFileRemove = (index: number) => {
+        setFiles((prev) => prev.filter((_, i) => i !== index))
+        setFilePreviews((prev) => prev.filter((_, i) => i !== index))
     }
 
-    const getFilePlaceholderPreview = (file: File) => {
-        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    const getFilePlaceholderPreview = (fileName:string) => {
+        const fileExtension = fileName.split('.').pop()?.toLowerCase()
         switch (fileExtension) {
             case "pdf":
                 return <PictureAsPdfIcon sx={{fontSize: 100}}/>
@@ -171,6 +173,38 @@ function ChatWindow() {
         }
     }
 
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        minWidth: "400px",
+        minHeight: "400px",
+        maxWidth: "auto",
+        bgcolor: '#555',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    }
+
+    const [open, setOpen] = useState(false)
+    const handleOpen = (image:string) => {
+        setModalData(image)
+        setOpen(true)
+    }
+    const handleClose = () => setOpen(false)
+    const [modalData, setModalData] = useState<string | null>(null)
+
+    const downloadImage = () => {
+        if (!modalData) return
+        const link = document.createElement("a")
+        link.href = modalData
+        link.download = modalData.split("/").pop()!
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
     return (
         <>
             <div className={theme === "dark" ? "chatWindowContainerDark" : "chatWindowContainer"}>
@@ -183,67 +217,82 @@ function ChatWindow() {
                         ref={chatContainerRef}>
                         {messages.length > 0 ? (
                             <div>
-                                {messages.filter((message) => message.ConversationID == searchParams.get("id")).map((message, index) => (
-                                    <div key={index}>
-                                        <MessageBubble key={index} message={message.Content}/>
-                                    </div>
-                                ))}
+                                {messages.filter((message) => message.ConversationID == searchParams.get("id"))
+                                    .map((message, index) => {
+                                        const content = message.Content
+                                        const hasExtension = content.includes(".")
+                                        const extension = hasExtension ? content.split(".").pop()!.toLowerCase() : ""
+
+                                        let renderedContent
+
+                                        if (
+                                            extension === "jpg" || extension === "jpeg" || extension === "png" ||
+                                            extension === "gif" || extension === "webp" || extension === "heic" || extension === "heif"
+                                        ) {
+                                            renderedContent = (
+                                                <img src={content} alt="Image" className="chatWindowImagePreview" onClick={() => handleOpen(content)}
+                                                     style={{ cursor: "pointer" }}/>
+                                            )
+                                        } else if (
+                                            extension === "mp4" || extension === "webm" || extension === "ogg" ||
+                                            extension === "mov" || extension === "3gp" || extension === "mkv"
+                                        ) {
+                                            renderedContent = (
+                                                <video controls className="chatWindowMediaVideo">
+                                                    <source src={content} type={`video/${extension}`} />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            )
+                                        } else if (hasExtension) {
+                                            renderedContent = (
+                                                <div onClick={() => window.open(content, "_blank")}
+                                                     style={{ cursor: "pointer"}}>
+                                                    {getFilePlaceholderPreview(content)}
+                                                </div>
+                                            )
+                                        } else {
+                                            renderedContent = content
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                <MessageBubble key={index} message={renderedContent} />
+                                            </div>
+                                        )
+                                    })}
                             </div>
                         ) : (
                             <div>No messages yet.</div>
                         )}
                     </div>
                     <div className={theme === "dark" ? "chatWindowControlContainerDark" : "chatWindowControlContainer"}>
-                        <div
-                            className={theme === "dark" ? "chatWindowControlInputContainerDark" : "chatWindowControlInputContainer"}>
-                            <div
-                                className={theme === "dark" ? "chatWindowControlPictureDark" : "chatWindowControlPicture"}>
-                                <button
-                                    className={theme === "dark" ? "chatWindowControlButtonDark" : "chatWindowControlButton"}
-                                    onClick={handleImageClick}>
-                                    <ImageIcon/>
-                                </button>
-                                <input type='file' accept={"image/*"} ref={inputImageRef} style={{display: 'none'}}
-                                       onChange={handleImageChange}/>
-                            </div>
+                        <div className={theme === "dark" ? "chatWindowControlInputContainerDark" : "chatWindowControlInputContainer"}>
                             <div className={theme === "dark" ? "chatWindowControlFileDark" : "chatWindowControlFile"}>
                                 <button
                                     className={theme === "dark" ? "chatWindowControlButtonDark" : "chatWindowControlButton"}
                                     onClick={handleFileClick}>
-                                    <AttachFileIcon/>
+                                    <AddIcon/>
                                 </button>
-                                <input type='file' accept={""} ref={inputFileRef} onChange={handleFileChange}
+                                <input type='file' accept={""} ref={inputRef} onChange={handleFileChange}
                                        style={{display: 'none'}}/>
                             </div>
                             <div className={theme === "dark" ? "chatWindowControlInputDark" : "chatWindowControlInput"}>
-                                <div
-                                    className={theme === "dark" ? "chatWindowControlInputPreviewContainerDark" : "chatWindowControlInputPreviewContainer"}>
-                                    {image && (
-                                        <div
-                                            className={theme === "dark" ? "chatWindowControlInputImageContainerDark" : "chatWindowControlInputImageContainer"}>
-                                            <img src={image} alt={"ChatImagePreview"}
-                                                 className={theme === "dark" ? "chatWindowControlInputPreviewImageDark" : "chatWindowControlInputPreviewImage"}/>
-                                            <button
-                                                className={theme === "dark" ? "chatWindowControlInputPreviewImageRemoveDark" : "chatWindowControlInputPreviewImageRemove"}
-                                                onClick={handleImageRemove}>
-                                                <CancelIcon/>
-                                            </button>
-                                        </div>
-                                    )}
-                                    {file && (
-                                        <div
+                                <div className={theme === "dark" ? "chatWindowControlInputPreviewContainerDark" : "chatWindowControlInputPreviewContainer"}>
+                                    {files && files.length > 0 && filePreviews.map((file, index) => (
+                                        <div key={file.name}
                                             className={theme === "dark" ? "chatWindowControlInputFileContainerDark" : "chatWindowControlInputFileContainer"}>
                                             <div
                                                 className={theme === "dark" ? "chatWindowControlInputPreviewFileDark" : "chatWindowControlInputPreviewFile"}>
-                                                {filePreview}
-                                                <p>{fileName}</p>
+                                                {file.preview}
+                                                <p>{file.name}</p>
                                             </div>
                                             <button
                                                 className={theme === "dark" ? "chatWindowControlInputPreviewImageRemoveDark" : "chatWindowControlInputPreviewImageRemove"}
-                                                onClick={handleFileRemove}>
+                                                onClick={()=>handleFileRemove(index)}>
                                                 <CancelIcon/>
                                             </button>
                                         </div>
+                                        )
                                     )}
                                 </div>
                                 <textarea
@@ -256,9 +305,17 @@ function ChatWindow() {
                                  onClick={() => {
                                      const sanitizedText = sanitizeInput(inputText)
                                      if (sanitizedText !== "") {
-                                         sendMessage(sanitizedText, searchParams.get("id")!)
+                                         sendMessage(sanitizedText, searchParams.get("id")!, files, fileData)
                                          reformatTextarea()
-                                     } else reformatTextarea()
+                                         setFiles([])
+                                         setFileData([])
+                                         setFilePreviews([])
+                                     } else {
+                                         reformatTextarea()
+                                         setFiles([])
+                                         setFileData([])
+                                         setFilePreviews([])
+                                     }
                                  }}>
                                 <button
                                     className={theme === "dark" ? "chatWindowControlButtonDark" : "chatWindowControlButton"}>
@@ -268,6 +325,28 @@ function ChatWindow() {
                         </div>
                     </div>
                 </div>
+                {open && modalData && (
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <Box sx={style}>
+                            <div className={"chatWindowModalContainer"}>
+                                <div className={"chatWindowModalActionContainer"}>
+                                    <button className={"chatWindowModalAction"} onClick={downloadImage}>
+                                        <DownloadIcon/>
+                                    </button>
+                                    <button className={"chatWindowModalAction"} onClick={handleClose}>
+                                        <CloseIcon/>
+                                    </button>
+                                </div>
+                                <div className={"chatWindowModalImageContainer"}>
+                                    <img src={modalData}></img>
+                                </div>
+                            </div>
+                        </Box>
+                    </Modal>
+                )}
             </div>
         </>
     )
