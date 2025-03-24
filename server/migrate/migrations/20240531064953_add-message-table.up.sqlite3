@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS Message (
     Content TEXT,
     Timestamp DATETIME,
     ConversationID INTEGER,
-    SeenBy TEXT,
     FOREIGN KEY (SenderID) REFERENCES User(UserID),
     FOREIGN KEY (ConversationID) REFERENCES Conversation(ConversationID)
 );

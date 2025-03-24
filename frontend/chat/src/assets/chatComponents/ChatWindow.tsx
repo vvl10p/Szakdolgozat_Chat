@@ -18,10 +18,12 @@ import MessageBubble from "./MessageBubble.tsx";
 import {Box, Modal} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
+import {updateSeenBy} from "../../API/chat.ts";
 
 function ChatWindow() {
     const {theme} = useTheme()
     const {sendMessage, messages} = useChat()
+    const token = localStorage.getItem("jwt")
 
     const [searchParams] = useSearchParams()
     const [inputText, setInputText] = useState<string>('')
@@ -69,7 +71,20 @@ function ChatWindow() {
         if (container) {
             container.scrollTop = container.scrollHeight
         }
-    }, [messages])
+    }, [messages,searchParams])
+
+    useEffect(() => {
+        (async()=> {
+            const chatID = searchParams.get("id")
+            if (!chatID || !token) return
+            try {
+                await updateSeenBy(chatID, token)
+            }
+            catch (err) {
+                console.error(err)
+            }
+        })()
+    }, [searchParams])
 
     const adjustHeight = () => {
         if (textareaRef.current) {
@@ -341,7 +356,7 @@ function ChatWindow() {
                                     </button>
                                 </div>
                                 <div className={"chatWindowModalImageContainer"}>
-                                    <img src={modalData}></img>
+                                    <img alt={"opened image"} src={modalData}></img>
                                 </div>
                             </div>
                         </Box>

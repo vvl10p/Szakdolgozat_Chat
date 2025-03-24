@@ -8,9 +8,10 @@ export async function Register(username: string, password: string, email: string
             email
         })
     }
-    const res = await fetch("http://localhost:5174/register", requestOptions)
+    const res = await fetch(import.meta.env.VITE_BACKEND_URL+"/register", requestOptions)
     if (!res.ok) {
-        throw new Error()
+        const data = await res.json().catch(() => null)
+        throw new Error(data.message)
     }
     return await res.json()
 }
@@ -24,9 +25,17 @@ export async function Login(username: string, password: string) {
             password,
         })
     }
-    const res = await fetch("http://localhost:5174/login", requestOptions)
-    if (!res.ok) {
-        throw new Error()
+    try {
+        const res = await fetch(import.meta.env.VITE_BACKEND_URL+"/login", requestOptions)
+        if (!res.ok) {
+            const data = await res.json().catch(() => null)
+
+            throw new Error(data.message)
+        }
+        return await res.json()
     }
-    return await res.json()
+    catch (error) {
+        alert(error)
+    }
+
 }

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"main/services/chat"
 	"main/services/friend"
 	"main/services/message"
 	"main/services/user"
@@ -24,7 +25,7 @@ func NewAPIServer(address string, db *sql.DB) *APIServer {
 
 func (s *APIServer) Run() error {
 	corsOptions := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 		AllowCredentials: true,
@@ -44,7 +45,11 @@ func (s *APIServer) Run() error {
 	messageHandler := message.NewHandler(messageStore)
 	messageHandler.RegisterRoutes(router)
 
+	chatStore := chat.NewStore(s.db)
+	chatHandler := chat.NewHandler(chatStore)
+	chatHandler.RegisterRoutes(router)
+
 	handler := corsOptions.Handler(router)
 
-	return http.ListenAndServe(s.address, handler)
+	return http.ListenAndServeTLS(s.address, "cert.pem", "key.pem", handler)
 }

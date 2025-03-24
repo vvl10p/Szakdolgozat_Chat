@@ -40,15 +40,18 @@ function Register() {
             setVisible(true)
             return
         }
-        setVisible(false)
         if (password == confPass) {
             try {
-                const res = await RegisterAPI(username, password, email)
+                const res = await RegisterAPI(username, password, email.toLowerCase())
                 setVisible(false)
                 navigate("/login")
                 return res
-            } catch (err) {
-                setErrorMessage("Something went wrong!")
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    setErrorMessage(err.message)
+                    setVisible(true)
+                }
+                setErrorMessage("Something went wrong")
                 setVisible(true)
             }
         }
@@ -68,24 +71,24 @@ function Register() {
                 <div className={theme === "dark" ? "registerContainerDark" : "registerContainer"}>
                     <form className={theme === "dark" ? "registerFormDark" : "registerForm"}>
                         <label>Email</label>
-                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={email}
+                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={email} autoComplete={"email"}
                                placeholder={"Email"} required={true}
                                onChange={event => {
                                    setEmail(event.target.value)
                                }}/>
                         <label>Username</label>
-                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={"text"}
+                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={"text"} autoComplete={"off"}
                                placeholder={"Username"} onChange={event => {
                             setUsername(event.target.value)
                         }}/>
                         <label>Password</label>
-                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={"password"}
+                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={"password"} autoComplete={"new-password"}
                                placeholder={"Password"}
                                onChange={event => {
                                    setPassword(event.target.value)
                                }}/>
                         <label>Confirm password</label>
-                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={"password"}
+                        <input className={theme === "dark" ? "registerInputDark" : "registerInput"} type={"password"} autoComplete={"off"}
                                placeholder={"Confirm password"}
                                onChange={event => {
                                    setConfPass(event.target.value)

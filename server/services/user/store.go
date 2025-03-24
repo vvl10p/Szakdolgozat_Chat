@@ -10,6 +10,10 @@ type Store struct {
 	db *sql.DB
 }
 
+func NewStore(db *sql.DB) *Store {
+	return &Store{db: db}
+}
+
 func (store *Store) GetUsers(userId int, searchQuery string) ([]types.UserBasicInfo, error) {
 	var rows *sql.Rows
 	var err error
@@ -66,10 +70,6 @@ func (store *Store) GetUserData(userId int) (username string, avatarPath string,
 	return u.Username, u.AvatarPath, nil
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{db: db}
-}
-
 func (store *Store) UploadAvatar(id int, pathString string) (avatarPath string, err error) {
 	_, err = store.db.Exec("UPDATE User SET AvatarPath = ? WHERE UserID = ?", pathString, id)
 	if err != nil {
@@ -109,7 +109,7 @@ func (store *Store) CreateUser(user types.User) error {
 }
 
 func (store *Store) GetUserByUsername(username string) (*types.User, error) {
-	rows, err := store.db.Query("SELECT * FROM User WHERE Username = ?", username)
+	rows, err := store.db.Query("SELECT * FROM User WHERE LOWER(Username) = ?", username)
 	if err != nil {
 		return nil, err
 	}
@@ -124,6 +124,24 @@ func (store *Store) GetUserByUsername(username string) (*types.User, error) {
 		return nil, fmt.Errorf("user not found")
 	}
 
+	return u, nil
+}
+
+func (store *Store) GetUserByEmail(email string) (*types.User, error) {
+	rows, err := store.db.Query("SELECT * FROM User WHERE Email = ?", email)
+	if err != nil {
+		return nil, err
+	}
+	u := new(types.User)
+	for rows.Next() {
+		u, err = scanRowIntoUser(rows)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if u.ID == 0 {
+		return nil, fmt.Errorf("user not found")
+	}
 	return u, nil
 }
 

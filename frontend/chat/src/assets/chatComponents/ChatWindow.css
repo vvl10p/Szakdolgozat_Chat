@@ -379,7 +379,7 @@
     border-radius: 50%;
     color: white;
     cursor: pointer;
-    box-shadow: 2px 2px 2px #333333;
+    box-shadow: 4px 4px 4px #000000;
 }
 
 .chatWindowModalAction svg {

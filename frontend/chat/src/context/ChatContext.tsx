@@ -1,7 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {useUser} from "./UserContext.tsx";
-//import {getMessages} from "../API/chat.ts";
-//import {useSearchParams} from "react-router-dom";
 
 interface ChatContext {
     socket: React.RefObject<WebSocket | null>
@@ -57,29 +55,6 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
         }
     }
 
-    /*useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const msgs = await getMessages(searchParams.get("id")!, localStorage.getItem("jwt")!)
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                const messagesToDisplay: ReceivedMessage[] = msgs.map((msg) => ({
-                    MsgId: msg.MsgID,
-                    Sender: msg.Sender,
-                    Content: msg.Content,
-                    Timestamp: msg.Timestamp,
-                    ConversationID: msg.ConversationID,
-                    SeenBy: msg.SeenBy,
-                }))
-                setMessages(messagesToDisplay)
-                console.log("messages loaded", messages)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchMessages()
-    }, [searchParams])*/
-
     useEffect(() => {
         if (!user) {
             if (socket.current) {
@@ -91,7 +66,7 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
 
         if (!socket.current || socket.current?.readyState === WebSocket.CLOSED) {
 
-            socket.current = new WebSocket(`ws://localhost:5175/ws?userID=${user.id}`)
+            socket.current = new WebSocket("wss://"+import.meta.env.VITE_BACKEND_URL.replace("https://","")+`/ws?userID=${user.id}`)
 
             socket.current.onerror = (ev) => {
                 console.error("WebSocket error:", ev)
@@ -153,7 +128,7 @@ export const ChatProvider = ({children}: { children: React.ReactNode }) => {
     const reconnectWebSocket = () => {
         console.log("Attempting to reconnect...");
         if (user) {
-            socket.current = new WebSocket(`ws://localhost:5175/ws?userID=${user.id}`)
+            socket.current = new WebSocket("wss://"+import.meta.env.VITE_BACKEND_URL.replace("https://","")+`/ws?userID=${user.id}`)
 
             socket.current.onerror = (ev) => {
                 console.error("WebSocket error:", ev)

@@ -9,7 +9,7 @@ export async function AvatarUpload(token: string, avatarPath: string) {
             avatarPath
         })
     }
-    const res = await fetch("http://localhost:5174/avatar_upload", requestOptions)
+    const res = await fetch(import.meta.env.VITE_BACKEND_URL+"/avatar_upload", requestOptions)
     const data = await res.json().catch(() => null)
     if (!res.ok || data.avatarPath == "") {
         throw new Error
@@ -29,7 +29,7 @@ export async function ChangePassword(token: string, newPassword: string, oldPass
             newPassword,
         })
     }
-    const res = await fetch("http://localhost:5174/user/update_password", requestOptions)
+    const res = await fetch(import.meta.env.VITE_BACKEND_URL+"/user/update_password", requestOptions)
     if (!res.ok) {
         throw new Error
     }
@@ -44,7 +44,7 @@ export async function GetUserData(token: string) {
             "Authorization": `Bearer ${token}`
         },
     }
-    const res = await fetch("http://localhost:5174/user/data", requestOptions)
+    const res = await fetch(import.meta.env.VITE_BACKEND_URL+"/user/data", requestOptions)
     if (!res.ok) {
         throw new Error
     }

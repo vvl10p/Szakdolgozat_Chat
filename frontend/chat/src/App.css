@@ -94,6 +94,8 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    min-width: fit-content;
+    padding: 0.5rem;
 }
 
 .mainHeaderContainerDark {
@@ -105,11 +107,12 @@ body {
 .mainContentContainerDark {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 12em;
     padding: 1rem;
+    max-width: 55%;
+    min-width: fit-content;
 }
 
 .mainContentContainerDark button, .mainContentContainerDark button:visited {

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"main/types"
 	"main/utils"
+	"strconv"
 )
 
 type Store struct {
@@ -41,7 +42,6 @@ func scanRowsIntoMessages(rows *sql.Rows) (*types.Message, error) {
 		&message.Content,
 		&message.Timestamp,
 		&message.ConversationID,
-		&message.SeenBy,
 	)
 	if err != nil {
 		return nil, err
@@ -61,6 +61,35 @@ func (store *Store) DeleteMessages(messageID string) error {
 	_, err := store.db.Exec("DELETE FROM Message WHERE MessageID = ?", messageID)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func (store *Store) UpdateSeen(chatID string, userID int) error {
+	intChatID, err := strconv.Atoi(chatID)
+	if err != nil {
+		return err
+	}
+	rows, err := store.db.Query("SELECT M.MessageID FROM Message M LEFT JOIN SeenBy SB ON M.MessageID = SB.MessageID WHERE M.ConversationID = ? AND M.SenderID != ? AND SB.MessageID IS NULL", intChatID, userID)
+	if err != nil {
+		return err
+	}
+
+	messageIDs := make([]int, 0)
+	for rows.Next() {
+		var id int
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil
+		}
+		messageIDs = append(messageIDs, id)
+	}
+
+	for _, m := range messageIDs {
+		_, err = store.db.Exec("INSERT INTO SeenBy (MessageID, UserID) VALUES (?,?)", m, userID)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

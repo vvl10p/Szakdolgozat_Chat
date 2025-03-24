@@ -90,7 +90,7 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.loginFooter span, .loginFooter span:hover, .loginFooter span:visited {
+.loginFooterLink, .loginFooterLink:hover, .loginFooterLink:visited {
     color: #390096;
     text-decoration: none;
     cursor: pointer;
@@ -184,7 +184,7 @@
     font-size: 1.2em;
 }
 
-.loginFooterDark span {
+.loginFooterLinkDark, .loginFooterLinkDark:hover, .loginFooterLinkDark:visited {
     color: #ffff0a;
     text-decoration: underline;
     cursor: pointer;

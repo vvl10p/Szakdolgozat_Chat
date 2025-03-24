@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS Notification (
-    NotificationID INTEGER PRIMARY KEY AUTOINCREMENT,
-    UserID INTEGER,
-    Content TEXT,
-    Timestamp DATETIME,
-    FOREIGN KEY (UserID) REFERENCES User(UserID)
-);

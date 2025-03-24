@@ -6,13 +6,17 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	"io"
+	"log"
+	"net"
 	"net/http"
+	"os"
+	"strings"
 )
-
-const messageKey = "supersecretmessagekeyforcipher12"
 
 var Validate = validator.New()
 
@@ -34,14 +38,20 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	return json.NewEncoder(w).Encode(v)
 }
 
-func WriteError(w http.ResponseWriter, status int, err error) {
-	err = WriteJSON(w, status, map[string]string{"error": err.Error()})
+func WriteError(w http.ResponseWriter, status int, err error, errormsg string) {
+	err = WriteJSON(w, status, map[string]string{"error": err.Error(), "message": errormsg})
 	if err != nil {
 		return
 	}
 }
 
 func EncryptMessage(plainMessage string) (string, error) {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	messageKey := os.Getenv("MESSAGE_KEY")
+
 	key := []byte(messageKey)
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -65,6 +75,12 @@ func EncryptMessage(plainMessage string) (string, error) {
 }
 
 func DecryptMessage(encryptedMessage string) (string, error) {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	messageKey := os.Getenv("MESSAGE_KEY")
+	
 	key := []byte(messageKey)
 
 	if len(encryptedMessage) < 24 {
@@ -100,4 +116,16 @@ func DecryptMessage(encryptedMessage string) (string, error) {
 	}
 
 	return string(plaintext), nil
+}
+
+func ValidateEmail(email string) error {
+	parts := strings.Split(email, "@")
+	if len(parts) != 2 {
+		return errors.New("invalid email")
+	}
+	_, err := net.LookupMX(parts[1])
+	if err != nil {
+		return err
+	}
+	return nil
 }

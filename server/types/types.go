@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+type ChatStore interface {
+	SaveMessage(message MessageFromWS) (*Message, error)
+	GetConversations(userID string) ([]string, error)
+}
+
 type UserStore interface {
 	GetUserByUsername(username string) (*User, error)
 	GetUserById(userID int) (*User, error)
@@ -12,11 +17,13 @@ type UserStore interface {
 	GetUserData(userID int) (username string, avatarPath string, err error)
 	GetUsers(userID int, searchQuery string) ([]UserBasicInfo, error)
 	UpdatePassword(userID int, password string) error
+	GetUserByEmail(email string) (*User, error)
 }
 
 type MessageStore interface {
 	GetMessages(ChatID string) ([]Message, error)
 	DeleteMessages(ChatID string) error
+	UpdateSeen(ChatID string, userID int) error
 }
 
 type FriendStore interface {
@@ -25,13 +32,20 @@ type FriendStore interface {
 	GetFriendsForSidebar(userID int) ([]UserFriendStatus, error)
 }
 
+type MessageFromWS struct {
+	Event   string `json:"Event"`
+	ChatID  string `json:"ChatID"`
+	Sender  string `json:"Sender"`
+	Content string `json:"Content"`
+	File    []byte `json:"File"`
+}
+
 type Message struct {
 	ID             int       `json:"MsgID"`
 	SenderID       int       `json:"Sender"`
 	Content        string    `json:"Content"`
 	Timestamp      time.Time `json:"Timestamp"`
 	ConversationID int       `json:"ConversationID"`
-	SeenBy         string    `json:"SeenBy"`
 }
 
 type User struct {
